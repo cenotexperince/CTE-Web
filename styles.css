@@ -1089,3 +1089,124 @@ button:active {
 .cenotes .boton {
     margin-top: 18px;
 }
+/* Reducir espacio entre presentación y "Elige tu experiencia" */
+
+.cenotes {
+    margin-bottom: 8px;
+}
+
+.paquetes {
+    margin-top: 0;
+}
+.cenotes {
+    margin-bottom: 8px;
+}
+
+.paquetes {
+    margin-top: 0;
+}
+.paquetes h2 {
+    margin-top: 0;
+}
+/* Reducir espacio entre presentación y experiencias */
+
+.cenotes {
+    margin-bottom: 8px;
+}
+
+.paquetes {
+    margin-top: -40px;
+    padding-top: 0;
+}
+
+.paquetes h2 {
+    margin-top: 0;
+}
+.titulo-experiencias {
+    background-color: #0d7c66;
+    color: white;
+
+    text-align: center;
+
+    padding: 24px 20px 28px;
+
+    border-radius: 0 0 120px 120px;
+
+    margin-bottom: 28px;
+}
+
+.titulo-experiencias h2 {
+    margin: 0;
+
+    font-size: 32px;
+    line-height: 1.05;
+}
+
+.titulo-experiencias p {
+    margin: 10px 0 0;
+
+    font-size: 14px;
+    font-weight: 400;
+
+    opacity: 0.92;
+}
+.paquete-visual {
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            rgba(255, 255, 255, 0.78),
+            rgba(232, 248, 241, 0.82)
+        ),
+        url("img/casa-tortuga.jpg");
+
+    background-size: cover;
+    background-position: center;
+
+    border: 1px solid rgba(13, 124, 102, 0.14);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.12);
+}
+.beneficio-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    padding: 14px 12px;
+
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.78);
+
+    border: 1px solid rgba(13, 124, 102, 0.08);
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.04);
+
+    text-align: left;
+}
+/* =========================
+   FONDO NATURAL - BASICO
+========================= */
+
+.paquete-visual {
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            rgba(255, 255, 255, 0.78),
+            rgba(232, 248, 241, 0.82)
+        ),
+        url("img/casa-tortuga.jpg");
+
+    background-size: cover;
+    background-position: center;
+
+    border: 1px solid rgba(13, 124, 102, 0.14);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.12);
+}
