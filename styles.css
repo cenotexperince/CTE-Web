@@ -719,3 +719,52 @@ button:active {
 .dos-ojos-paquetes .paquete-golden {
     margin-top: 30px;
 }
+/* =========================
+   MINOTAURO - TARJETA
+========================= */
+
+.paquete-minotauro .paquete-titulo {
+    background: linear-gradient(
+        135deg,
+        #ffd21f,
+        #ffea73
+    );
+}
+
+.paquete-minotauro .paquete-titulo span {
+    color: #665000;
+}
+
+.paquete-minotauro .paquete-titulo h3 {
+    color: #2f2a00;
+}
+.minotauro-paquetes .paquete-minotauro .minotauro-titulo {
+    background: linear-gradient(
+        135deg,
+        #ffd21f,
+        #ffea73
+    ) !important;
+}
+
+.minotauro-paquetes .paquete-minotauro .minotauro-titulo span {
+    color: #665000 !important;
+}
+
+.minotauro-paquetes .paquete-minotauro .minotauro-titulo h3 {
+    color: #2f2a00 !important;
+}
+/* =========================
+   PORTADA MINOTAURO
+========================= */
+
+.hero-minotauro {
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, 0.25),
+            rgba(0, 0, 0, 0.60)
+        ),
+        url("img/minotauro.jpg");
+
+    background-size: cover;
+    background-position: center;
+}
