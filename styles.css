@@ -976,3 +976,116 @@ button:active {
 .paquete-visual-golden .golden-titulo span {
     color: #665000;
 }
+/* =========================
+   PORTADA - TARJETAS
+========================= */
+
+.cenotes .cenote {
+    overflow: hidden;
+    border-radius: 22px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.12);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.cenotes .cenote:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 18px 38px rgba(0, 0, 0, 0.16);
+}
+
+/* CASA TORTUGA */
+
+.cenote-casa .cenote-contenido {
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #ccefe1
+        );
+}
+
+.cenote-dos-ojos .cenote-contenido {
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #c9eafa
+        );
+}
+
+/* MINOTAURO */
+
+.cenote-minotauro .cenote-contenido {
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #fff5cf
+        );
+}
+/* =========================
+   PORTADA - BOTONES POR EXPERIENCIA
+========================= */
+
+/* CASA TORTUGA */
+.cenote-casa .boton {
+    background-color: #0d7c66;
+}
+
+.cenote-casa .boton:hover {
+    background-color: #095f4e;
+}
+
+
+/* DOS OJOS */
+.cenote-dos-ojos .boton {
+    background-color: #176b7a;
+}
+
+.cenote-dos-ojos .boton:hover {
+    background-color: #10515d;
+}
+
+
+/* MINOTAURO */
+.cenote-minotauro .boton {
+    background-color: #d4b86a;
+    color: #3a2f00;
+}
+
+.cenote-minotauro .boton:hover {
+    background-color: #c2a652;
+}
+/* =========================
+   PORTADA - RETOQUES FINALES
+========================= */
+
+.cenotes {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.cenotes .cenote {
+    margin: 0;
+}
+.cenotes .cenote-contenido h3 {
+    margin-bottom: 8px;
+    font-size: 24px;
+}
+
+.cenotes .detalle {
+    margin-bottom: 14px;
+    font-weight: 600;
+}
+.cenotes .boton {
+    margin-top: 18px;
+}
