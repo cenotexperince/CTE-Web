@@ -1135,11 +1135,16 @@ button:active {
     margin-bottom: 28px;
 }
 
-.titulo-experiencias h2 {
-    margin: 0;
+.paquetes > h2 {
+    width: 80%;
+    max-width: 420px;
 
-    font-size: 32px;
-    line-height: 1.05;
+    margin: 0 auto 0;
+
+    font-size: 26px;
+    line-height: 1.1;
+
+    text-align: center;
 }
 
 .titulo-experiencias p {
