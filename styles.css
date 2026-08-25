@@ -1699,3 +1699,19 @@ button:active {
         top: 70px !important;
     }
 }
+@media (max-width: 768px) {
+    .hero-home {
+        background-size: auto 100% !important;
+        background-position: center top !important;
+        background-repeat: no-repeat !important;
+
+        background-color: #0b2f2a;
+    }
+}
+@media (max-width: 768px) {
+    .hero-home {
+        background-size: 115% auto !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+    }
+}
