@@ -1688,116 +1688,26 @@ button:active {
     position: relative !important;
     top: 120px !important;
     transform: none !important;
-}
-.hero-home .hero-content {
-    position: relative !important;
-    top: 120px !important;
-    transform: none !important;
-}
-@media (max-width: 768px) {
-    .hero-home .hero-content {
-        top: 70px !important;
-    }
-}
-@media (max-width: 768px) {
-    .hero-home {
-        background-size: auto 100% !important;
-        background-position: center top !important;
-        background-repeat: no-repeat !important;
+}transform: none !important;
 
-        background-color: #0b2f2a;
-    }
-}
-@media (max-width: 768px) {
-    .hero-home {
-        background-size: 115% auto !important;
-        background-position: center center !important;
-        background-repeat: no-repeat !important;
-    }
-}
-@media (max-width: 768px) {
-    .hero-home {
-        background-size: cover !important;
-        background-position: 35% center !important;
-        background-repeat: no-repeat !important;
-    }
-}
-background-position: 25% center !important;
-@media (max-width: 768px) {
-    .hero-home {
-        min-height: 260px !important;
-    }
-
-    .hero-home .hero-overlay {
-        min-height: 260px !important;
-    }
-}
-@media (max-width: 768px) {
-    .hero-home {
-        min-height: 260px !important;
-        background-size: cover !important;
-        background-position: 35% center !important;
-        background-repeat: no-repeat !important;
-    }
-
-    .hero-home .hero-overlay {
-        min-height: 260px !important;
-    }
-}
 /* =========================================
    HERO HOME - AJUSTE MOVIL DEFINITIVO
 ========================================= */
 
 @media (max-width: 768px) {
-
     .hero-home {
-        height: 300px !important;
-        min-height: 300px !important;
-
+        min-height: 260px !important;
         background-size: cover !important;
-        background-position: center center !important;
+        background-position: 35% center !important;
         background-repeat: no-repeat !important;
-        background-color: transparent !important;
+        background-color: #0b2f2a;
     }
 
     .hero-home .hero-overlay {
-        height: 300px !important;
-        min-height: 300px !important;
-
-        padding: 0 14px !important;
-
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
+        min-height: 260px !important;
     }
 
     .hero-home .hero-content {
-        position: relative !important;
-
-        top: 45px !important;
-
-        width: 92% !important;
-        margin: 0 auto !important;
-        padding: 0 !important;
-
-        background: transparent !important;
-        box-shadow: none !important;
-        backdrop-filter: none !important;
-        transform: none !important;
-    }
-
-    .hero-home .hero-content h1 {
-        font-size: 42px !important;
-        margin-bottom: 10px !important;
-    }
-
-    .hero-home .hero-content p {
-        font-size: 18px !important;
-        line-height: 1.15 !important;
-    }
-
-    .hero-home .hero-content span {
-        font-size: 14px !important;
-        line-height: 1.3 !important;
+        top: 70px !important;
     }
 }
