@@ -1115,7 +1115,7 @@ button:active {
 }
 
 .paquetes {
-    margin-top: -40px;
+    margin-top: -36px;
     padding-top: 0;
 }
 
@@ -1136,15 +1136,25 @@ button:active {
 }
 
 .paquetes > h2 {
-    width: 80%;
-    max-width: 420px;
+    width: 82%;
+    max-width: 440px;
 
-    margin: 0 auto 0;
+    margin: 0 auto 22px;
 
-    font-size: 26px;
-    line-height: 1.1;
+    padding: 20px 18px 24px;
+
+    background-color: #0d7c66;
+    color: white;
+
+    border-radius: 0 0 120px 120px;
 
     text-align: center;
+
+    font-size: 26px;
+    line-height: 1.08;
+    font-weight: 700;
+
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 }
 
 .titulo-experiencias p {
@@ -1214,4 +1224,93 @@ button:active {
 
     box-shadow:
         0 12px 30px rgba(0, 0, 0, 0.12);
+}
+/* =========================
+   CASA TORTUGA - AJUSTES FINOS
+========================= */
+
+.paquete-visual {
+    margin-bottom: 28px;
+}
+
+.paquete-visual .precio {
+    margin-top: 26px;
+    margin-bottom: 22px;
+}
+
+.paquete-visual .beneficios-visual {
+    padding-left: 28px;
+    padding-right: 28px;
+}
+
+.paquete-visual .boton-whatsapp {
+    width: calc(100% - 56px);
+    max-width: 340px;
+}
+.paquete-visual .frase-experiencia {
+    margin: 24px 28px 18px;
+}
+/* =========================
+   GOLDEN → ATV
+========================= */
+
+.paquete-visual-golden {
+    margin-bottom: 18px;
+}
+
+.atv-extra {
+    margin-top: 10px;
+    padding-top: 0;
+}
+.atv-extra {
+    margin-top: -70stylespx;
+}
+/* Acerca la sección ATV a Golden */
+.atv-extra {
+    margin-top: -70px;
+}
+/* Mejor contraste para encabezado ATV */
+
+.paquete-atv .atv-titulo span {
+    color: #f2f2f2 !important;
+}
+
+.paquete-atv .atv-titulo h3 {
+    color: #ffffff !important;
+}
+.paquete-atv .atv-titulo {
+    background:
+        linear-gradient(
+            135deg,
+            #242424,
+            #4a4a4a
+        );
+}
+.atv-extra > p {
+    margin-top: 4px;
+    margin-bottom: 16px;
+
+    font-size: 15px;
+    color: #555;
+}
+/* =========================
+   ATV - FONDO NATURAL
+========================= */
+
+.paquete-visual-atv {
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            rgba(255, 255, 255, 0.82),
+            rgba(232, 248, 241, 0.86)
+        ),
+        url("img/casa-tortuga.jpg");
+
+    background-size: cover;
+    background-position: center;
+
+    border: 1px solid rgba(13, 124, 102, 0.14);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
 }
