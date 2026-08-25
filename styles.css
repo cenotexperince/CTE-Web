@@ -19,10 +19,10 @@ body {
 
     background:
         linear-gradient(
-            rgba(0, 0, 0, 0.25),
-            rgba(0, 0, 0, 0.60)
+            rgba(0, 0, 0, 0.04),
+            rgba(0, 0, 0, 0.20)
         ),
-        url("img/casa-tortuga.jpg");
+        url("img/CTE3.png");
 
     background-size: cover;
     background-position: center;
@@ -1667,4 +1667,35 @@ button:active {
 
 .hero-home .hero-content h1 {
     margin-bottom: 14px !important;
+}
+.hero-home .hero-content h1,
+.hero-home .hero-content p,
+.hero-home .hero-content span {
+    text-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.70) !important;
+}
+.hero-home .hero-content {
+    transform: translateY(35px);
+}
+@media (max-width: 768px) {
+    .hero-home .hero-content {
+        transform: translateY(40px);
+    }
+}
+/* BAJAR TEXTO DEL HERO PRINCIPAL */
+
+.hero-home .hero-content {
+    position: relative !important;
+    top: 120px !important;
+    transform: none !important;
+}
+.hero-home .hero-content {
+    position: relative !important;
+    top: 120px !important;
+    transform: none !important;
+}
+@media (max-width: 768px) {
+    .hero-home .hero-content {
+        top: 70px !important;
+    }
 }
