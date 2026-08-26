@@ -2249,3 +2249,16 @@ button:active {
             #08799a
         ) !important;
 }
+.paquete-snorkel .paquete-titulo {
+    background: linear-gradient(135deg, #bff3dc, #9fe8c8) !important;
+}
+.paquete-snorkel .paquete-titulo {
+    background: linear-gradient(135deg, #d8f8ea, #b8ecd2) !important;
+}
+.paquete-snorkel .paquete-titulo {
+    background: linear-gradient(
+        135deg,
+        #d9f4e8,
+        #bfe9d5
+    ) !important;
+}
