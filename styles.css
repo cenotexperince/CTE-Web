@@ -1688,8 +1688,7 @@ button:active {
     position: relative !important;
     top: 120px !important;
     transform: none !important;
-}transform: none !important;
-
+}
 /* =========================================
    HERO HOME - AJUSTE MOVIL DEFINITIVO
 ========================================= */
@@ -1708,6 +1707,12 @@ button:active {
     }
 
     .hero-home .hero-content {
-        top: 70px !important;
+        top: 30px !important;
+    }
+}
+@media (max-width: 768px) {
+    .hero-home .hero-content {
+        top: 0 !important;
+        transform: translateY(-45px) !important;
     }
 }
