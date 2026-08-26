@@ -22,8 +22,7 @@ body {
             rgba(0, 0, 0, 0.04),
             rgba(0, 0, 0, 0.20)
         ),
-        url("img/CTE3.png");
-
+        url("img/casa-tortuga.jpg");
     background-size: cover;
     background-position: center;
 
@@ -1708,4 +1707,305 @@ button:active {
         top: 0 !important;
         transform: translateY(-120px) !important;
     }
+}
+.hero-home {
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, 0.04),
+            rgba(0, 0, 0, 0.20)
+        ),
+        url("img/CTE3.png") !important;
+
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+/* Separación entre presentación de Dos Ojos y experiencias */
+.dos-ojos .cenote {
+    margin-bottom: 35px;
+}
+/* Separación correcta en Dos Ojos */
+.dos-ojos-paquetes {
+    margin-top: 30px !important;
+}
+/* =====================================
+   DOS OJOS - ENCABEZADO EN UN SOLO RECUADRO
+===================================== */
+.encabezado-experiencia {
+    width: 82%;
+    max-width: 430px;
+    margin: 22px auto 28px;
+    padding: 18px 20px;
+    text-align: center;
+
+    background: linear-gradient(180deg, #a7e7f5 0%, #7fd8ee 100%);
+    color: white;
+
+    border-radius: 24px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.encabezado-experiencia h2 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: white;
+}
+
+.encabezado-experiencia p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.95);
+}
+.dos-ojos-paquetes > h2,
+.dos-ojos-paquetes > .paquetes-intro {
+    display: none;
+}/* =====================================
+   DOS OJOS - ENCABEZADO PREMIUM
+===================================== */
+
+.encabezado-dos-ojos {
+    width: 84%;
+    max-width: 460px;
+    margin: 24px auto 30px;
+    padding: 22px 24px 24px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(171, 232, 246, 0.96),
+            rgba(111, 205, 230, 0.96)
+        );
+
+    border: 1px solid rgba(26, 141, 173, 0.20);
+    border-radius: 28px;
+
+    box-shadow:
+        0 10px 28px rgba(0, 88, 120, 0.16);
+
+    position: relative;
+    overflow: hidden;
+}
+
+/* brillo suave decorativo */
+.encabezado-dos-ojos::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    right: -40px;
+
+    width: 120px;
+    height: 120px;
+
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 50%;
+}
+
+.encabezado-kicker {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+
+    color: #0b6f8c;
+}
+
+.encabezado-dos-ojos h2 {
+    margin: 0 0 8px;
+
+    font-size: 24px;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: 1px;
+
+    color: #075b75;
+}
+
+.encabezado-dos-ojos p {
+    margin: 0;
+
+    font-size: 15px;
+    line-height: 1.45;
+
+    color: #24596a;
+}
+/* =====================================
+   TARJETAS PREMIUM NATURALES REUTILIZABLES
+===================================== */
+
+.premium-natural {
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            rgba(255, 255, 255, 0.78),
+            rgba(232, 248, 241, 0.82)
+        ),
+        url("img/casa-tortuga.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    border: 1px solid rgba(13, 124, 102, 0.18);
+    border-radius: 28px;
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.10);
+}
+
+/* Título superior de la tarjeta */
+.premium-natural .paquete-titulo,
+.premium-natural .paquete-titulo-basico,
+.premium-natural .paquete-titulo-dos-ojos,
+.premium-natural .paquete-titulo-minotauro,
+.premium-natural .paquete-titulo h3,
+.premium-natural h3 {
+    color: #0d7c66;
+}
+
+/* Etiqueta pequeña tipo EXPERIENCIA */
+.premium-natural span,
+.premium-natural .kicker {
+    letter-spacing: 3px;
+}
+
+/* Precio */
+.premium-natural .precio {
+    color: #0d7c66;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Beneficios / filas con emojis */
+.premium-natural .beneficio-item,
+.premium-natural li,
+.premium-natural .item-beneficio {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin: 10px 18px;
+    padding: 14px 16px;
+
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(13, 124, 102, 0.10);
+    border-radius: 18px;
+
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(2px);
+}
+
+/* Emoji / ícono */
+.premium-natural .beneficio-icono,
+.premium-natural .beneficio-emoji,
+.premium-natural .icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 46px;
+    width: 46px;
+    height: 46px;
+
+    border-radius: 50%;
+    background: rgba(220, 243, 235, 0.95);
+
+    font-size: 24px;
+}
+
+/* Texto interno */
+.premium-natural .beneficio-item strong,
+.premium-natural li strong,
+.premium-natural .item-beneficio strong {
+    display: block;
+    color: #056a57;
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
+.premium-natural .beneficio-item p,
+.premium-natural li p,
+.premium-natural .item-beneficio p {
+    margin: 0;
+    color: #444;
+    line-height: 1.4;
+}
+
+/* Frase final */
+.premium-natural .frase-final,
+.premium-natural .frase-cierre,
+.premium-natural em {
+    color: #0b7c66;
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* Botón */
+.premium-natural .boton,
+.premium-natural .btn-whatsapp,
+.premium-natural a.boton {
+    background: #19a96f;
+    color: white;
+    border-radius: 999px;
+    box-shadow: 0 8px 18px rgba(25, 169, 111, 0.25);
+}
+
+.premium-natural .boton:hover,
+.premium-natural .btn-whatsapp:hover,
+.premium-natural a.boton:hover {
+    background: #159764;
+}
+
+/* Ajuste móvil */
+@media (max-width: 768px) {
+    .premium-natural {
+        border-radius: 22px;
+    }
+
+    .premium-natural .beneficio-item,
+    .premium-natural li,
+    .premium-natural .item-beneficio {
+        margin: 10px 12px;
+        padding: 12px 14px;
+    }
+
+    .premium-natural .beneficio-icono,
+    .premium-natural .beneficio-emoji,
+    .premium-natural .icono {
+        min-width: 42px;
+        width: 42px;
+        height: 42px;
+        font-size: 22px;
+    }
+}
+.premium-dos-ojos {
+    background:
+        linear-gradient(
+            rgba(255, 255, 255, 0.78),
+            rgba(232, 248, 241, 0.82)
+        ),
+        url("img/dos-ojos.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.premium-minotauro {
+    background:
+        linear-gradient(
+            rgba(255, 255, 255, 0.78),
+            rgba(245, 239, 214, 0.82)
+        ),
+        url("img/minotauro.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
