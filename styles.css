@@ -2009,3 +2009,214 @@ button:active {
     background-position: center;
     background-repeat: no-repeat;
 }
+/* =====================================
+   DOS OJOS - SNORKEL PREMIUM FINAL
+===================================== */
+
+.dos-ojos-paquetes .paquete-snorkel {
+    background:
+        linear-gradient(
+            rgba(235, 248, 252, 0.78),
+            rgba(220, 243, 249, 0.84)
+        ),
+        url("img/dos-ojos.jpg") !important;
+
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+
+    border: 1px solid rgba(21, 129, 160, 0.18) !important;
+    border-radius: 28px !important;
+
+    box-shadow:
+        0 14px 32px rgba(0, 90, 120, 0.14) !important;
+
+    padding-bottom: 22px !important;
+}
+
+.dos-ojos-paquetes .paquete-snorkel .beneficios-visual {
+    margin-bottom: 14px !important;
+}
+
+.dos-ojos-paquetes .paquete-snorkel .boton {
+    margin-top: 8px !important;
+}
+/* Compactar espacio interno en Snorkel */
+.dos-ojos-paquetes .paquete-snorkel .beneficios-visual {
+    margin-bottom: 4px !important;
+}
+
+.dos-ojos-paquetes .paquete-snorkel .boton {
+    margin-top: 0 !important;
+}
+
+.dos-ojos-paquetes .paquete-snorkel {
+    padding-bottom: 14px !important;
+}
+/* Compactar tarjeta Snorkel para igualarla con Tour */
+
+.dos-ojos-paquetes .paquete-snorkel {
+    padding-bottom: 6px !important;
+}
+
+.dos-ojos-paquetes .paquete-snorkel .beneficios-visual {
+    margin-bottom: -4px !important;
+}
+
+.dos-ojos-paquetes .paquete-snorkel .boton {
+    margin-top: -32px !important;
+    margin-bottom: 6px !important;
+}
+/* Golden más suave */
+.paquete-visual-golden .golden-titulo {
+    background:
+        linear-gradient(
+            135deg,
+            #f8df86,
+            #fff0bd
+        );
+}
+
+/* Dos Ojos más vivo */
+.encabezado-dos-ojos,
+.dos-ojos-paquetes .paquete-titulo {
+    background:
+        linear-gradient(
+            135deg,
+            #66d7f0,
+            #23b9df
+        );
+}
+/* ================================
+   DOS OJOS - COLORES PREMIUM SUAVES
+================================ */
+
+.dos-ojos-paquetes .paquete-titulo,
+.encabezado-dos-ojos {
+    background:
+        linear-gradient(
+            135deg,
+            #b9eaf4,
+            #83d8e9
+        ) !important;
+}
+
+/* Texto de títulos */
+.dos-ojos-paquetes .paquete-titulo h3,
+.encabezado-dos-ojos h2 {
+    color: #08677d !important;
+}
+
+/* Texto pequeño EXPERIENCIA */
+.dos-ojos-paquetes .paquete-titulo span,
+.encabezado-dos-ojos .encabezado-kicker {
+    color: #28788a !important;
+}
+/* Golden más ligero */
+.paquete-visual-golden .golden-titulo,
+.paquete-golden .golden-titulo {
+    background:
+        linear-gradient(
+            135deg,
+            #f7e29a,
+            #fff3c7
+        ) !important;
+}
+/* BUCEO DOS OJOS - TONO DIFERENCIADO */
+.dos-ojos-paquetes .paquete-buceo .paquete-titulo {
+    background:
+        linear-gradient(
+            135deg,
+            #a9dff0,
+            #73c8df
+        ) !important;
+}
+
+/* BADGE NIVEL AVANZADO */
+.dos-ojos-paquetes .badge-avanzada {
+    display: inline-block;
+
+    margin-top: 10px;
+    padding: 7px 14px;
+
+    background: #0b5f8a !important;
+    color: #ffffff !important;
+
+    border-radius: 999px;
+
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+
+    box-shadow: 0 5px 12px rgba(0, 70, 110, 0.22);
+}
+/* =====================================
+   BUCEO DOS OJOS - AJUSTE FINAL
+===================================== */
+
+/* Cabecera de Buceo más azul y diferenciada */
+.dos-ojos-paquetes .paquete-buceo > .paquete-titulo {
+    background:
+        linear-gradient(
+            135deg,
+            #8fd4e8,
+            #55b9d8
+        ) !important;
+}
+
+/* Título Buceo */
+.dos-ojos-paquetes .paquete-buceo > .paquete-titulo h3 {
+    color: #075c78 !important;
+}
+
+/* EXPERIENCIA solamente */
+.dos-ojos-paquetes .paquete-buceo > .paquete-titulo > span:first-child {
+    color: #246f83 !important;
+}
+
+/* Badge avanzado: forzar contraste */
+.dos-ojos-paquetes .paquete-buceo .badge-avanzada {
+    display: inline-block !important;
+
+    margin-top: 10px !important;
+    padding: 7px 15px !important;
+
+    background: #075f91 !important;
+    color: #ffffff !important;
+
+    border-radius: 999px !important;
+
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.2px !important;
+
+    box-shadow:
+        0 5px 12px rgba(0, 70, 110, 0.25) !important;
+}
+
+/* También fuerza blanco en cualquier contenido interno */
+.dos-ojos-paquetes .paquete-buceo .badge-avanzada * {
+    color: #ffffff !important;
+}
+/* BUCEO DOS OJOS - AMARILLO TENUE */
+
+.dos-ojos-paquetes .paquete-buceo > .paquete-titulo {
+    background:
+        linear-gradient(
+            135deg,
+            #f7e7a8,
+            #fff2c9
+        ) !important;
+}
+
+.dos-ojos-paquetes .paquete-buceo > .paquete-titulo h3 {
+    color: #8a6500 !important;
+}
+
+.dos-ojos-paquetes .paquete-buceo > .paquete-titulo > span:first-child {
+    color: #9b7a22 !important;
+}
+/* Acercar botón final a Buceo Dos Ojos */
+.dos-ojos-paquetes + .volver-experiencias {
+    margin-top: -45px !important;
+}
