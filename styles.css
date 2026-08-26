@@ -2582,3 +2582,127 @@ button:active {
 .encabezado-minotauro p {
     color: #ffffff !important;
 }
+/* =====================================
+   DOS OJOS - AJUSTE DE ESPACIOS
+===================================== */
+
+/* Acerca "Elige tu experiencia" a la presentación */
+.encabezado-dos-ojos {
+    margin-top: -20px !important;
+    margin-bottom: 10px !important;
+}
+
+/* Acerca la primera tarjeta al encabezado azul */
+.dos-ojos-paquetes .paquete-tour {
+    margin-top: 0 !important;
+}
+/* =====================================
+   DOS OJOS - ESPACIADO PREMIUM COMPACTO
+===================================== */
+
+/* Elige tu experiencia más cerca de la primera tarjeta */
+.encabezado-dos-ojos {
+    margin-bottom: 8px !important;
+}
+
+/* Tarjetas de experiencia más juntas entre sí */
+.dos-ojos-paquetes .paquete {
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+}
+
+/* Compactar parte inferior de Tour Privado */
+.dos-ojos-paquetes .paquete-tour {
+    padding-bottom: 8px !important;
+}
+
+/* Beneficios un poco más pegados al botón */
+.dos-ojos-paquetes .paquete-tour .beneficios-visual {
+    margin-bottom: -6px !important;
+}
+
+/* Botón más integrado */
+.dos-ojos-paquetes .paquete-tour .boton {
+    margin-top: -10px !important;
+    margin-bottom: 6px !important;
+}
+/* =====================================
+   DOS OJOS - CORRECCIÓN FINAL SNORKEL
+===================================== */
+
+.dos-ojos-paquetes .paquete-snorkel .beneficios-visual {
+    margin-bottom: 0 !important;
+}
+
+.dos-ojos-paquetes .paquete-snorkel .boton {
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+}
+
+.dos-ojos-paquetes .paquete-snorkel {
+    padding-bottom: 10px !important;
+}
+/* =====================================
+   CASA TORTUGA - ESPACIADO COMPACTO
+===================================== */
+
+/* Acercar el encabezado verde a BÁSICO */
+.titulo-experiencias {
+    margin-bottom: 10px !important;
+}
+
+/* BÁSICO */
+.paquete-basico {
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+}
+
+/* SILVER */
+.paquete-silver {
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+}
+
+/* GOLDEN */
+.paquete-golden {
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+}
+.paquete-basico,
+.paquete-silver,
+.paquete-golden {
+    margin-top: 0 !important;
+    margin-bottom: 4px !important;
+}
+/* =====================================
+   CASA TORTUGA - ESPACIADO FINAL
+===================================== */
+
+/* Acercar bloque verde a "Descubre Casa Tortuga" */
+.casa-tortuga-page .cenotes {
+    margin-bottom: -18px !important;
+}
+
+/* Compactar bloque verde */
+
+/* Acercar BÁSICO al bloque verde */
+.casa-tortuga-page .paquetes {
+    margin-top: 0 !important;
+}
+
+.casa-tortuga-page .paquete-basico {
+    margin-top: -115px !important;
+}
+/* =====================================
+   CASA TORTUGA - ENCABEZADO SUPERPUESTO
+===================================== */
+
+.casa-tortuga-page .titulo-experiencias {
+    position: relative !important;
+    z-index: 5 !important;
+
+    transform: translateY(-130px) !important;
+
+    margin-top: 0 !important;
+    margin-bottom: -25px !important;
+}
