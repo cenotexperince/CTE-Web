@@ -1677,19 +1677,16 @@ button:active {
 .hero-home .hero-content {
     transform: translateY(35px);
 }
-@media (max-width: 768px) {
-    .hero-home .hero-content {
-        transform: translateY(40px);
-    }
-}
 /* BAJAR TEXTO DEL HERO PRINCIPAL */
 
-.hero-home .hero-content {
-    position: relative !important;
-    top: 120px !important;
-    transform: none !important;
-}
-/* =========================================
+/* Posición del texto SOLO en escritorio */
+@media (min-width: 769px) {
+    .hero-home .hero-content {
+        position: relative !important;
+        top: 120px !important;
+        transform: none !important;
+    }
+}/* =========================================
    HERO HOME - AJUSTE MOVIL DEFINITIVO
 ========================================= */
 
@@ -1706,13 +1703,9 @@ button:active {
         min-height: 260px !important;
     }
 
-    .hero-home .hero-content {
-        top: 30px !important;
-    }
-}
-@media (max-width: 768px) {
-    .hero-home .hero-content {
+.hero-home .hero-content {
+        position: relative !important;
         top: 0 !important;
-        transform: translateY(-45px) !important;
+        transform: translateY(-120px) !important;
     }
 }
