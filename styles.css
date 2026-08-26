@@ -1705,7 +1705,7 @@ button:active {
 .hero-home .hero-content {
         position: relative !important;
         top: 0 !important;
-        transform: translateY(-120px) !important;
+        transform: translateY(30px) !important;
     }
 }
 .hero-home {
@@ -2219,4 +2219,33 @@ button:active {
 /* Acercar botón final a Buceo Dos Ojos */
 .dos-ojos-paquetes + .volver-experiencias {
     margin-top: -45px !important;
+}
+/* =====================================
+   DOS OJOS - ELIGE TU EXPERIENCIA
+   AZUL OSCURO + TEXTO BLANCO
+===================================== */
+
+.encabezado-dos-ojos {
+    background:
+        linear-gradient(
+            135deg,
+            #0b5f8a,
+            #0a7aa3
+        ) !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+.encabezado-dos-ojos .encabezado-kicker,
+.encabezado-dos-ojos h2,
+.encabezado-dos-ojos p {
+    color: #ffffff !important;
+}
+.encabezado-dos-ojos {
+    background:
+        linear-gradient(
+            135deg,
+            #07506f,
+            #08799a
+        ) !important;
 }
