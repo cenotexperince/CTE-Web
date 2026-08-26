@@ -762,7 +762,7 @@ button:active {
             rgba(0, 0, 0, 0.25),
             rgba(0, 0, 0, 0.60)
         ),
-        url("img/minotauro.jpg");
+        url("img/Cenote-Minotauro1.jpg");
 
     background-size: cover;
     background-position: center;
@@ -2261,4 +2261,324 @@ button:active {
         #d9f4e8,
         #bfe9d5
     ) !important;
+}
+/* ===============================
+   MINOTAURO - AJUSTE PREMIUM
+================================= */
+
+/* Acercar "Elige tu experiencia" */
+.minotauro-paquetes {
+    margin-top: -70px !important;
+}
+
+.minotauro-paquetes .paquetes-intro,
+.minotauro-paquetes p {
+    margin-top: 12px;
+    margin-bottom: 22px;
+    text-align: center;
+}
+
+/* Tarjeta premium Minotauro */
+.premium-minotauro {
+    position: relative;
+    overflow: hidden;
+    border-radius: 26px;
+    background:
+        linear-gradient(rgba(245, 251, 248, 0.76), rgba(230, 243, 236, 0.82)),
+        url("img/minotauro.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid rgba(7, 122, 103, 0.18);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.10);
+}
+
+/* Encabezado amarillo suave */
+.premium-minotauro .paquete-titulo {
+    background: linear-gradient(135deg, #f6de63, #efd34e);
+}
+
+/* Área de beneficios */
+.premium-minotauro .beneficios-visual {
+    padding: 18px 18px 8px;
+}
+
+/* Tarjetitas internas */
+.premium-minotauro .beneficio-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.88);
+    border-radius: 22px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* Emoji */
+.premium-minotauro .beneficio-icono {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #dff2ea;
+    font-size: 24px;
+}
+
+/* Textos */
+.premium-minotauro .beneficio-item strong {
+    display: block;
+    color: #006b5f;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.premium-minotauro .beneficio-item p {
+    margin: 0;
+    color: #444;
+    line-height: 1.35;
+    font-size: 14px;
+}
+
+/* Botón */
+.premium-minotauro .boton {
+    display: block;
+    width: fit-content;
+    margin: 14px auto 22px;
+}
+/* =====================================
+   MINOTAURO - CABECERA PREMIUM CORREGIDA
+===================================== */
+
+.premium-minotauro .paquete-titulo {
+    padding: 20px 24px 22px !important;
+    text-align: center !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f7e8ad,
+            #fff3cb
+        ) !important;
+
+    border-radius: 24px 24px 0 0 !important;
+}
+
+.premium-minotauro .paquete-titulo span {
+    display: block !important;
+
+    margin-bottom: 6px !important;
+
+    font-size: 12px !important;
+    letter-spacing: 3px !important;
+
+    color: #9a7a24 !important;
+}
+
+.premium-minotauro .paquete-titulo h3 {
+    margin: 0 !important;
+
+    font-size: 28px !important;
+    line-height: 1.1 !important;
+    font-weight: 800 !important;
+    letter-spacing: 1px !important;
+
+    color: #876400 !important;
+}
+.minotauro-paquetes {
+    margin-top: -20px !important;
+}
+
+.minotauro-paquetes .paquetes-intro {
+    margin-bottom: 20px !important;
+}
+/* =====================================
+   MINOTAURO - ELIGE TU EXPERIENCIA
+===================================== */
+
+.encabezado-minotauro {
+    width: 84%;
+    max-width: 470px;
+
+    margin: 0 auto 24px;
+    padding: 20px 24px 24px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #087563,
+            #0d8a72
+        );
+
+    color: white;
+
+    border-radius: 0 0 70px 70px;
+
+    box-shadow:
+        0 10px 24px rgba(0, 80, 65, 0.18);
+}
+
+.encabezado-minotauro h2 {
+    margin: 0 0 8px;
+
+    color: white !important;
+
+    font-size: 27px;
+    line-height: 1.1;
+    font-weight: 800;
+}
+
+.encabezado-minotauro p {
+    margin: 0 !important;
+
+    color: white !important;
+
+    font-size: 15px;
+    line-height: 1.4;
+
+    opacity: 0.95;
+}
+/* =====================================
+   MINOTAURO - CABECERA RECORRIDO
+===================================== */
+
+.premium-minotauro .paquete-titulo {
+    padding: 20px 24px 22px !important;
+    text-align: center !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f7e8ad,
+            #fff3cb
+        ) !important;
+
+    border-radius: 24px 24px 0 0 !important;
+}
+
+.premium-minotauro .paquete-titulo span {
+    display: block !important;
+    margin-bottom: 6px !important;
+
+    font-size: 12px !important;
+    letter-spacing: 3px !important;
+
+    color: #9a7a24 !important;
+}
+
+.premium-minotauro .paquete-titulo h3 {
+    margin: 0 !important;
+
+    font-size: 26px !important;
+    line-height: 1.1 !important;
+    font-weight: 800 !important;
+    letter-spacing: 1px !important;
+
+    color: #876400 !important;
+}
+.premium-minotauro {
+    margin-top: 30px !important;
+}
+/* Igualar ancho de encabezado y tarjeta Minotauro */
+
+.encabezado-minotauro,
+.minotauro-paquetes .paquete-minotauro {
+    width: 84% !important;
+    max-width: 520px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+.encabezado-minotauro,
+.minotauro-paquetes .paquete-minotauro {
+    width: 100% !important;
+    max-width: 520px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+.encabezado-minotauro {
+    position: relative !important;
+    top: 20px !important;
+    margin-bottom: 50px !important;
+}
+/* Encimar ligeramente "ELIGE TU EXPERIENCIA" */
+.encabezado-minotauro {
+    position: relative !important;
+    z-index: 5 !important;
+
+    transform: translateY(-30px) !important;
+
+    margin-bottom: 8px !important;
+}
+.premium-minotauro {
+    margin-top: 0 !important;
+}
+/* Acercar botón final en Minotauro */
+.minotauro-paquetes + .volver-experiencias {
+    margin-top: -45px !important;
+}
+.premium-minotauro .paquete-titulo {
+    background:
+        linear-gradient(
+            135deg,
+            #f3b7ad,
+            #e9968b
+        ) !important;
+}
+
+.premium-minotauro .paquete-titulo h3 {
+    color: #8a3028 !important;
+}
+
+.premium-minotauro .paquete-titulo span {
+    color: #a34b42 !important;
+}
+.premium-minotauro .paquete-titulo {
+    background:
+        linear-gradient(
+            135deg,
+            #f7d0ca,
+            #efb2aa
+        ) !important;
+}
+.encabezado-minotauro {
+    background:
+        linear-gradient(
+            135deg,
+            #8fcfba,
+            #6fb99f
+        ) !important;
+}
+
+.encabezado-minotauro h2 {
+    color: #ffffff !important;
+}
+
+.encabezado-minotauro p {
+    color: #f7fffb !important;
+}
+.encabezado-minotauro {
+    background:
+        linear-gradient(
+            135deg,
+            #b7dfcf,
+            #95cdb8
+        ) !important;
+}
+.encabezado-minotauro {
+    background:
+        linear-gradient(
+            135deg,
+            #79c4aa,
+            #58a98e
+        ) !important;
+}
+
+.encabezado-minotauro h2,
+.encabezado-minotauro p {
+    color: #ffffff !important;
 }
