@@ -2706,3 +2706,31 @@ button:active {
     margin-top: 0 !important;
     margin-bottom: -25px !important;
 }
+/* =====================================
+   HOME CTE - ESPACIADO MÓVIL COMPACTO
+===================================== */
+
+@media (max-width: 768px) {
+
+    /* Menos espacio después del hero */
+    .hero-home {
+        margin-bottom: 0 !important;
+    }
+
+    /* Acercar "Elige tu experiencia" al hero */
+    .hero-home + main {
+        padding-top: 18px !important;
+    }
+
+    /* Reducir espacio del título principal */
+    .hero-home + main > h2 {
+        margin-top: 12px !important;
+        margin-bottom: 24px !important;
+    }
+
+    /* Tarjetas principales más juntas */
+    main .cenote {
+        margin-top: 0 !important;
+        margin-bottom: 18px !important;
+    }
+}
