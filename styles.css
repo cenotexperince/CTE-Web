@@ -2734,3 +2734,114 @@ button:active {
         margin-bottom: 18px !important;
     }
 }
+@media (max-width: 768px) {
+
+    .hero-home + main {
+        padding-top: 8px !important;
+    }
+
+    .hero-home + main > h2 {
+        margin-top: 8px !important;
+        margin-bottom: 14px !important;
+    }
+
+    main .cenote {
+        margin-bottom: 4px !important;
+    }
+}
+/* =====================================
+   HOME CTE - COMPACTAR TARJETAS EN MÓVIL
+===================================== */
+
+@media (max-width: 768px) {
+
+    /* Texto descriptivo dentro de las tarjetas */
+    .hero-home + main .cenote-contenido > p:not(.detalle) {
+        margin-top: 10px !important;
+        margin-bottom: 14px !important;
+    }
+
+    /* Botón más cerca del texto */
+    .hero-home + main .cenote-contenido .boton {
+        margin-top: 8px !important;
+        margin-bottom: 4px !important;
+    }
+
+    /* Menos espacio entre una experiencia y la siguiente */
+    .hero-home + main .cenote {
+        margin-bottom: 4px !important;
+    }
+
+    /* Subtítulo verde más cerca de la descripción */
+    .hero-home + main .cenote-contenido .detalle {
+        margin-bottom: 8px !important;
+    }
+}
+/* =====================================
+   HOME - CASA TORTUGA COMPACTA EN MÓVIL
+===================================== */
+
+@media (max-width: 768px) {
+
+    .cenote-casa .cenote-contenido {
+        padding-top: 18px !important;
+        padding-bottom: 18px !important;
+    }
+
+    .cenote-casa .cenote-contenido h3 {
+        margin-bottom: 10px !important;
+    }
+
+    .cenote-casa .cenote-contenido .detalle {
+        margin-top: 0 !important;
+        margin-bottom: 10px !important;
+    }
+
+    .cenote-casa .cenote-contenido p:not(.detalle) {
+        margin-top: 8px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .cenote-casa .boton {
+        margin-top: 8px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .cenote-casa {
+        margin-bottom: 12px !important;
+    }
+}
+/* =====================================
+   HOME - DOS OJOS COMPACTO EN MÓVIL
+===================================== */
+
+@media (max-width: 768px) {
+
+    .cenote-dos-ojos .cenote-contenido {
+        padding-top: 18px !important;
+        padding-bottom: 18px !important;
+    }
+
+    .cenote-dos-ojos .cenote-contenido h3 {
+        margin-bottom: 10px !important;
+    }
+
+    .cenote-dos-ojos .cenote-contenido .detalle {
+        margin-top: 0 !important;
+        margin-bottom: 10px !important;
+    }
+
+    .cenote-dos-ojos .cenote-contenido p:not(.detalle) {
+        margin-top: 8px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .cenote-dos-ojos .boton {
+        margin-top: 8px !important;
+        margin-bottom: 0 !important;
+    }
+
+    .cenote-dos-ojos {
+        margin-bottom: 12px !important;
+    }
+}
