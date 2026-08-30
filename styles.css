@@ -2972,4 +2972,33 @@ button:active {
         margin-bottom: 6px !important;
     }
 }
+/* =====================================
+   HOME - REDUCIR ESPACIO ENTRE TARJETAS
+===================================== */
 
+@media (max-width: 768px) {
+
+    .cenote-casa,
+    .cenote-dos-ojos,
+    .cenote-minotauro {
+        margin-bottom: 4px !important;
+    }
+
+    .cenote-dos-ojos,
+    .cenote-minotauro {
+        margin-top: 4px !important;
+    }
+}
+@media (max-width: 768px) {
+
+    .cenote-casa,
+    .cenote-dos-ojos,
+    .cenote-minotauro {
+        margin-bottom: 0 !important;
+    }
+
+    .cenote-dos-ojos,
+    .cenote-minotauro {
+        margin-top: -8px !important;
+    }
+}
