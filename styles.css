@@ -2972,33 +2972,91 @@ button:active {
         margin-bottom: 6px !important;
     }
 }
-/* =====================================
-   HOME - REDUCIR ESPACIO ENTRE TARJETAS
-===================================== */
+/* ==============================
+   SELECTOR DE IDIOMA EN / ES
+============================== */
 
-@media (max-width: 768px) {
+.language-switcher {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    z-index: 20;
 
-    .cenote-casa,
-    .cenote-dos-ojos,
-    .cenote-minotauro {
-        margin-bottom: 4px !important;
-    }
+    display: flex;
+    align-items: center;
+    gap: 6px;
 
-    .cenote-dos-ojos,
-    .cenote-minotauro {
-        margin-top: 4px !important;
-    }
+    padding: 8px 14px;
+    border-radius: 999px;
+
+    background: rgba(0, 70, 90, 0.45);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
 }
-@media (max-width: 768px) {
+.language-switcher .lang-option {
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+}
 
-    .cenote-casa,
-    .cenote-dos-ojos,
-    .cenote-minotauro {
-        margin-bottom: 0 !important;
-    }
+.language-switcher .lang-option.active {
+    color: #ffffff;
+}
 
-    .cenote-dos-ojos,
-    .cenote-minotauro {
-        margin-top: -8px !important;
-    }
+.language-switcher .lang-option:hover {
+    color: #ffffff;
+}
+
+.language-switcher span {
+    color: rgba(255, 255, 255, 0.60);
+}
+.language-switcher {
+    position: absolute !important;
+    top: 18px !important;
+    right: 28px !important;
+    left: auto !important;
+
+    background: rgba(0, 45, 60, 0.70) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    padding: 8px 14px;
+
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+.language-switcher .lang-option {
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+.language-switcher span {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+.hero-home {
+    position: relative !important;
+}
+
+.hero-home .language-switcher {
+    position: absolute !important;
+    top: 18px !important;
+    right: 25px !important;
+    left: auto !important;
+    z-index: 9999 !important;
+
+    background: rgba(0, 50, 65, 0.72) !important;
+    padding: 8px 14px !important;
+    border-radius: 30px !important;
+}
+
+.hero-home .language-switcher .lang-option {
+    color: white !important;
+    text-decoration: none !important;
+    font-weight: 700;
+}
+
+.hero-home .language-switcher span {
+    color: rgba(255,255,255,.75) !important;
 }
