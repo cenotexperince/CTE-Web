@@ -3060,3 +3060,95 @@ button:active {
 .hero-home .language-switcher span {
     color: rgba(255,255,255,.75) !important;
 }
+/* =====================================
+   MOBILE FIX - HOME ENGLISH VERSION
+===================================== */
+@media (max-width: 768px) {
+
+  /* HERO HOME */
+  .hero-home {
+    min-height: 560px !important;
+    background-position: center center !important;
+  }
+
+  .hero-overlay {
+    padding: 20px 16px !important;
+  }
+
+  .hero-content {
+    max-width: 100% !important;
+    text-align: center !important;
+    padding-top: 90px !important;
+  }
+
+  .hero-content h1 {
+    font-size: 72px !important;
+    line-height: 1 !important;
+    margin-bottom: 10px !important;
+  }
+
+  .hero-content p {
+    font-size: 24px !important;
+    line-height: 1.2 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .hero-content span {
+    display: block !important;
+    font-size: 18px !important;
+    line-height: 1.35 !important;
+    max-width: 280px !important;
+    margin: 0 auto !important;
+  }
+
+  /* BOTON EN / ES */
+  .language-switcher {
+    top: 18px !important;
+    right: 16px !important;
+    left: auto !important;
+    transform: none !important;
+    padding: 10px 18px !important;
+    border-radius: 999px !important;
+    font-size: 16px !important;
+    z-index: 20 !important;
+  }
+
+  /* BLOQUE AZUL */
+  .titulo-experiencias.premium-caribe {
+    width: 88% !important;
+    margin: 18px auto 14px auto !important;
+    padding: 18px 16px !important;
+    border-radius: 24px !important;
+  }
+
+  .titulo-experiencias.premium-caribe h2 {
+    font-size: 28px !important;
+    line-height: 1.08 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .titulo-experiencias.premium-caribe p {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+  }
+
+  /* TARJETAS */
+  .cenote-casa,
+  .cenote-dos-ojos,
+  .cenote-minotauro {
+    margin-bottom: 14px !important;
+  }
+
+  /* FORZAR COLORES CORRECTOS EN TEXTO DE TARJETAS */
+  .cenote-contenido h3 {
+    color: #1f1f1f !important;
+  }
+
+  .cenote-contenido .detalle {
+    color: #0b8a83 !important;
+  }
+
+  .cenote-contenido p {
+    color: #4a4a4a !important;
+  }
+}
