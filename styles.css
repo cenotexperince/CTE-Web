@@ -3060,3 +3060,22 @@ button:active {
 .hero-home .language-switcher span {
     color: rgba(255,255,255,.75) !important;
 }
+/* =====================================
+   SOLO HOME EN - COLORES DE TARJETAS
+===================================== */
+
+.home-en .cenote-contenido h3 {
+    color: #1f1f1f !important;
+}
+
+.home-en .cenote-contenido .detalle {
+    color: #0b8a83 !important;
+}
+
+.home-en .cenote-contenido p {
+    color: #4a4a4a !important;
+}
+
+.home-en .cenote-contenido .boton {
+    color: #ffffff !important;
+}
