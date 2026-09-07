@@ -3146,3 +3146,57 @@ button:active {
         max-width: 92%;
     }
 }
+/* =====================================
+   CASA TORTUGA - AJUSTE LOGO Y SUBTITULO
+===================================== */
+
+.hero-overlay-casa {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.hero-overlay-casa img {
+    max-width: 320px;
+    width: 80%;
+    height: auto;
+    margin-bottom: 4px;
+}
+
+.hero-subtitulo-casa {
+    margin: 0;
+    margin-top: -6px;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.35;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.28);
+    padding: 8px 14px;
+    border-radius: 14px;
+    max-width: 90%;
+}
+
+/* MÓVIL */
+@media (max-width: 768px) {
+    .hero-overlay-casa {
+        gap: 8px;
+    }
+
+    .hero-overlay-casa img {
+        max-width: 260px;
+        width: 78%;
+        margin-bottom: 2px;
+    }
+
+    .hero-subtitulo-casa {
+        margin-top: -4px;
+        font-size: 17px;
+        line-height: 1.3;
+        padding: 7px 12px;
+        max-width: 92%;
+    }
+}
