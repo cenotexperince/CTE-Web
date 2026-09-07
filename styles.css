@@ -3211,4 +3211,18 @@ button:active {
 .paquete-visual-silver .precio small {
     color: rgba(255,255,255,0.85) !important;
 }
+/* =====================================
+   SILVER - AJUSTE DE TARJETAS EN MOVIL
+===================================== */
 
+@media (max-width: 768px) {
+
+    .casa-tortuga-en-page .paquete-silver .beneficio-item,
+    .casa-tortuga-en-page .paquete-visual-silver .beneficio-item {
+        width: 88% !important;
+        max-width: none !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        box-sizing: border-box !important;
+    }
+}
