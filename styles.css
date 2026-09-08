@@ -3303,7 +3303,7 @@ button:active {
 }
 @media (max-width: 768px) {
   .hero-content-cte {
-    transform: translateY(-22px);
+    transform: translateY(-30px);
   }
 
   .hero-logo-cte {
@@ -3312,7 +3312,7 @@ button:active {
   }
 
   .hero-content-cte p {
-    margin-top: 0;
+    margin-top: -4;
     font-size: 18px;
     line-height: 1.25;
   }
