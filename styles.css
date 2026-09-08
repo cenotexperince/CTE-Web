@@ -3301,3 +3301,19 @@ button:active {
         max-width: 88%;
     }
 }
+@media (max-width: 768px) {
+  .hero-content-cte {
+    transform: translateY(-22px);
+  }
+
+  .hero-logo-cte {
+    max-width: 260px;
+    margin-bottom: 6px;
+  }
+
+  .hero-content-cte p {
+    margin-top: 0;
+    font-size: 18px;
+    line-height: 1.25;
+  }
+}
