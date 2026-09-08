@@ -3302,18 +3302,20 @@ button:active {
     }
 }
 @media (max-width: 768px) {
-  .hero-content-cte {
-    transform: translateY(-30px);
-  }
 
-  .hero-logo-cte {
-    max-width: 260px;
-    margin-bottom: 6px;
-  }
+    .hero-content-cte {
+        transform: translateY(-30px) !important;
+    }
 
-  .hero-content-cte p {
-    margin-top: -4;
-    font-size: 18px;
-    line-height: 1.25;
-  }
+    .hero-logo-cte {
+        max-width: 260px;
+        margin-bottom: 6px;
+    }
+
+    .hero-content-cte p {
+        margin-top: -4px;
+        font-size: 18px;
+        line-height: 1.25;
+    }
+
 }
