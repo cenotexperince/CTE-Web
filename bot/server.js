@@ -33,22 +33,30 @@ app.get("/health", (req, res) => {
 
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
-  const token = req.query["hub.verify_token"];
+  const receivedToken = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
-  if (mode === "subscribe" && token === VERIFY_TOKEN) {
+  console.log("🔎 Intento de verificación:");
+  console.log({
+    mode: mode,
+    receivedTokenLength: receivedToken?.length || 0,
+    expectedTokenLength: VERIFY_TOKEN?.length || 0,
+    tokenMatch: receivedToken === VERIFY_TOKEN,
+    challengePresent: Boolean(challenge)
+  });
+
+  if (
+    mode === "subscribe" &&
+    receivedToken === VERIFY_TOKEN &&
+    challenge
+  ) {
     console.log("✅ Webhook verificado por Meta");
     return res.status(200).send(challenge);
   }
 
   console.log("❌ Falló la verificación del webhook");
-
   return res.sendStatus(403);
 });
-
-// ----------------------------------------------------
-// RECIBIR MENSAJES DE WHATSAPP
-// ----------------------------------------------------
 
 app.post("/webhook", async (req, res) => {
 
@@ -298,4 +306,3 @@ app.listen(PORT, () => {
   console.log("");
 
 });
- 
