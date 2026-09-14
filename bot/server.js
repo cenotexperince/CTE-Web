@@ -292,7 +292,46 @@ async function sendWhatsAppMessage(to, message) {
     data
   );
 }
+// ------------------------------------------------------------
+// WEBHOOK DE 2CHAT - MENSAJES WABA RECIBIDOS
+// ------------------------------------------------------------
 
+app.post("/webhook/2chat", async (req, res) => {
+  // Respondemos inmediatamente a 2Chat
+  res.sendStatus(200);
+
+  try {
+    console.log("📨 Evento recibido desde 2Chat:");
+    console.log(JSON.stringify(req.body, null, 2));
+
+    const event = req.body;
+
+    // Solo procesamos mensajes recibidos de clientes
+    if (event.sent_by !== "user") {
+      console.log("ℹ️ Evento ignorado: no viene de un cliente");
+      return;
+    }
+
+    const from = event.remote_phone_number;
+    const message = event.message?.text?.trim();
+
+    if (!from || !message) {
+      console.log("⚠️ Evento sin teléfono o sin texto");
+      return;
+    }
+
+    console.log("📱 Cliente:", from);
+    console.log("💬 Mensaje:", message.toLowerCase());
+
+    // Por ahora solo probamos recepción
+    if (message.toLowerCase() === "english") {
+      console.log("✅ ENGLISH recibido correctamente desde 2Chat");
+    }
+
+  } catch (error) {
+    console.error("❌ Error procesando webhook de 2Chat:", error);
+  }
+});
 // ----------------------------------------------------
 // INICIAR SERVIDOR
 // ----------------------------------------------------
