@@ -3200,16 +3200,17 @@ button:active {
         max-width: 92%;
     }
 }
-/* SILVER - MEJOR CONTRASTE DEL PRECIO */
+/* SILVER - PRECIO CON TONO DEL TITULO */
 .paquete-silver .precio,
 .paquete-visual-silver .precio {
-    color: #ffffff !important;
+    color: #3f4a55 !important;
     font-weight: 800 !important;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    text-shadow: none !important;
 }
+
 .paquete-silver .precio small,
 .paquete-visual-silver .precio small {
-    color: rgba(255,255,255,0.85) !important;
+    color: #5a6670 !important;
 }
 /* =====================================
    SILVER - AJUSTE DE TARJETAS EN MOVIL
