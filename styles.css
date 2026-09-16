@@ -3389,3 +3389,30 @@ button:active {
         max-width: 90%;
     }
 }
+/* ==============================
+   DOS OJOS - COLORES DE PRECIOS
+============================== */
+
+.paquete-tour .precio {
+    color: #0b6f8a !important;
+}
+
+.paquete-snorkel .precio {
+    color: #0f8b78 !important;
+}
+
+.paquete-buceo .precio {
+    color: #8a6a00 !important;
+}
+
+.paquete-tour .precio small {
+    color: #4f7f8d !important;
+}
+
+.paquete-snorkel .precio small {
+    color: #4d877d !important;
+}
+
+.paquete-buceo .precio small {
+    color: #8c7a3c !important;
+}
