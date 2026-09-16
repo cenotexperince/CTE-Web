@@ -3416,3 +3416,12 @@ button:active {
 .paquete-buceo .precio small {
     color: #8c7a3c !important;
 }
+/* MINOTAURO - COLOR DEL PRECIO */
+.paquete-minotauro .precio {
+    color: #9b4a3c !important;
+    font-weight: 800 !important;
+}
+
+.paquete-minotauro .precio small {
+    color: #7f625c !important;
+}
