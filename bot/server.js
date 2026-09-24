@@ -79,7 +79,11 @@ app.post("/webhook", async (req, res) => {
       return;
     }
 
-    const from = message.from;
+    let from = message.from;
+
+    if (from.startsWith("521")) {
+       from = "52" + from.slice(3);
+    }
 
     const text =
       message?.text?.body
@@ -336,7 +340,7 @@ app.post("/webhook/2chat", async (req, res) => {
 // INICIAR SERVIDOR
 // ----------------------------------------------------
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
 
   console.log("");
   console.log("🌴 CET Bot iniciado");
