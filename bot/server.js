@@ -8,6 +8,7 @@ const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
+const clientState = new Map();
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
 const PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID;
@@ -96,7 +97,18 @@ app.post("/webhook", async (req, res) => {
 
     console.log(`📱 Cliente: ${from}`);
     console.log(`💬 Mensaje: ${text}`);
+    if (!clientState.has(from)) {
+  clientState.set(from, {});
+} 
+    if (
+  text.includes("experiencia básico") ||
+  text.includes("experiencia basico")
+) {
+  clientState.get(from).experience = "BASIC";
+  clientState.get(from).location = "CASA TORTUGA";
 
+  console.log("🐢 Experiencia detectada: BASIC - CASA TORTUGA");
+}
     const reply = getReply(text);
 
     await sendWhatsAppMessage(from, reply);
