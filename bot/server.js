@@ -86,10 +86,11 @@ app.post("/webhook", async (req, res) => {
        from = "52" + from.slice(3);
     }
 
-    const text =
-      message?.text?.body
-        ?.trim()
-        ?.toLowerCase();
+    const rawText =
+  message?.text?.body
+    ?.trim();
+
+const text = rawText?.toLowerCase();
 
     if (!text) {
       return;
@@ -106,10 +107,10 @@ app.post("/webhook", async (req, res) => {
 ) {
   clientState.get(from).experience = "BASIC";
   clientState.get(from).location = "CASA TORTUGA";
-
+  clientState.get(from).step = "LANGUAGE";
   console.log("🐢 Experiencia detectada: BASIC - CASA TORTUGA");
-}
-    const reply = getReply(text, from);
+  }
+    const reply = getReply(text, from, rawText);
 
     await sendWhatsAppMessage(from, reply);
 
@@ -127,11 +128,20 @@ app.post("/webhook", async (req, res) => {
 // LÓGICA INICIAL DEL BOT
 // ----------------------------------------------------
 
-function getReply(text, from) {
+function getReply(text, from, rawText) {
 
   const state = clientState.get(from) || {};
-const selectedExperience = state.experience;
-const selectedLocation = state.location;
+  const selectedExperience = state.experience;
+  const selectedLocation = state.location;
+  // Capturar nombre
+  if (state.step === "NAME") {
+    clientState.get(from).name = rawText;
+    clientState.get(from).step = "NUMBER_OF_PEOPLE";
+
+    return `¡Gracias, ${rawText}! 😊
+
+¿Cuántas personas serán para tu visita? 👥`;
+  }
 
   // Idioma inglés
 
@@ -170,6 +180,8 @@ https://cenotexperince.github.io/CTE-Web/video.html`;
       selectedExperience === "BASIC" &&
       selectedLocation === "CASA TORTUGA"
     ) {
+       clientState.get(from).step = "NAME";
+
             return `🇲🇽 ¡Perfecto! Continuaremos en español. 😊
 
 🐢 Vemos que estás interesado en la Experiencia Básico de Casa Tortuga.
