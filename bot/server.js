@@ -109,7 +109,7 @@ app.post("/webhook", async (req, res) => {
 
   console.log("🐢 Experiencia detectada: BASIC - CASA TORTUGA");
 }
-    const reply = getReply(text);
+    const reply = getReply(text, from);
 
     await sendWhatsAppMessage(from, reply);
 
@@ -127,7 +127,11 @@ app.post("/webhook", async (req, res) => {
 // LÓGICA INICIAL DEL BOT
 // ----------------------------------------------------
 
-function getReply(text) {
+function getReply(text, from) {
+
+  const state = clientState.get(from) || {};
+const selectedExperience = state.experience;
+const selectedLocation = state.location;
 
   // Idioma inglés
 
@@ -162,19 +166,23 @@ https://cenotexperince.github.io/CTE-Web/video.html`;
     text === "espanol" ||
     text === "spanish"
   ) {
+        if (
+      selectedExperience === "BASIC" &&
+      selectedLocation === "CASA TORTUGA"
+    ) {
+            return `🇲🇽 ¡Perfecto! Continuaremos en español. 😊
 
-    return `🌴 ¡Hola! 😊
+🐢 Vemos que estás interesado en la Experiencia Básico de Casa Tortuga.
 
-Gracias por comunicarte con Cenotes Experience Tulum — CET.
-
-¡Con gusto te ayudamos con tu visita! 🐢💦
+Con gusto te ayudaremos a continuar con tu reserva. 🌴💦
 
 Por favor indícanos:
 
 👤 Nombre y apellido
 👥 Número de personas
-📅 Fecha de visita
-
+📅 Fecha de visita`;
+    }
+  return `  
 Después te ayudaremos a elegir tu experiencia.
 
 🎥 Conoce nuestra experiencia:
