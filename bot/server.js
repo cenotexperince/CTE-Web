@@ -110,6 +110,8 @@ const text = rawText?.toLowerCase();
   clientState.get(from).step = "LANGUAGE";
   console.log("🐢 Experiencia detectada: BASIC - CASA TORTUGA");
   }
+  console.log("🧠 Estado actual:", clientState.get(from));
+
     const reply = getReply(text, from, rawText);
 
     await sendWhatsAppMessage(from, reply);
@@ -133,7 +135,7 @@ function getReply(text, from, rawText) {
   const state = clientState.get(from) || {};
   const selectedExperience = state.experience;
   const selectedLocation = state.location;
-  // Capturar nombre
+    // Capturar nombre
   if (state.step === "NAME") {
     clientState.get(from).name = rawText;
     clientState.get(from).step = "NUMBER_OF_PEOPLE";
@@ -142,7 +144,35 @@ function getReply(text, from, rawText) {
 
 ¿Cuántas personas serán para tu visita? 👥`;
   }
+    // Capturar número de personas
+  if (state.step === "NUMBER_OF_PEOPLE") {
+    const people = parseInt(rawText, 10);
 
+    if (isNaN(people) || people < 1) {
+      return `Por favor, indícanos un número válido de personas. 👥`;
+    }
+
+
+
+    clientState.get(from).people = people;
+    clientState.get(from).step = "DATE";
+
+    return `¡Perfecto! Serán ${people} persona${people > 1 ? "s" : ""}. 👥
+
+📅 ¿Cuál es la fecha en la que deseas visitar Casa Tortuga?`;
+  }
+      // Capturar fecha
+  if (state.step === "DATE") {
+    clientState.get(from).date = rawText;
+    clientState.get(from).step = "CONFIRMATION";
+
+    return `📅 Fecha de visita: ${rawText}
+
+👤 ${clientState.get(from).name}
+👥 ${clientState.get(from).people} personas
+
+¿Deseas continuar con tu reserva? ✅`;
+  }
   // Idioma inglés
 
   if (
