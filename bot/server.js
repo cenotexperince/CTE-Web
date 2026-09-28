@@ -1,5 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -12,6 +15,32 @@ const clientState = new Map();
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
 const PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const FOLIO_FILE = path.join(__dirname, "folio.json");
+
+function getNextFolio() {
+  let lastFolio = 0;
+
+  if (fs.existsSync(FOLIO_FILE)) {
+    const data = JSON.parse(
+      fs.readFileSync(FOLIO_FILE, "utf8")
+    );
+
+    lastFolio = data.lastFolio || 0;
+  }
+
+  const nextFolio = lastFolio + 1;
+
+  fs.writeFileSync(
+    FOLIO_FILE,
+    JSON.stringify({ lastFolio: nextFolio }, null, 2)
+  );
+
+  return `CT-${String(nextFolio).padStart(4, "0")}`;
+}
 
 // ----------------------------------------------------
 // PRUEBA DEL SERVIDOR
@@ -210,11 +239,17 @@ if (state.step === "NAME") {
       text === "sí" ||
       text === "si"
     ) {
+       
+      const folio = getNextFolio();
+      clientState.get(from).folio = folio;
+
       clientState.get(from).step = "COMPLETED";
 
       return `🎉 ¡Excelente!
 
 Tu solicitud de reserva ha sido confirmada. 🌴🐢
+
+🆔 Folio: ${folio}
 
 👤 ${clientState.get(from).name}
 👥 ${clientState.get(from).people} personas
