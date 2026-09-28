@@ -135,15 +135,45 @@ function getReply(text, from, rawText) {
   const state = clientState.get(from) || {};
   const selectedExperience = state.experience;
   const selectedLocation = state.location;
-    // Capturar nombre
-  if (state.step === "NAME") {
-    clientState.get(from).name = rawText;
-    clientState.get(from).step = "NUMBER_OF_PEOPLE";
+// Capturar nombre y detectar datos completos
+if (state.step === "NAME") {
 
-    return `¡Gracias, ${rawText}! 😊
+  const combinedData = rawText.match(
+    /^(.+?),\s*(\d+)\s*(?:personas?|pax)?\s*,\s*(.+)$/i
+  );
+
+  if (combinedData) {
+
+    const name = combinedData[1].trim();
+    const people = parseInt(combinedData[2], 10);
+    const date = combinedData[3].trim();
+
+    if (people < 1) {
+      return `Por favor, indícanos un número válido de personas. 👥`;
+    }
+
+    clientState.get(from).name = name;
+    clientState.get(from).people = people;
+    clientState.get(from).date = date;
+    clientState.get(from).step = "CONFIRMATION";
+
+    return `📋 Resumen de tu reserva:
+
+👤 ${name}
+👥 ${people} personas
+📅 ${date}
+
+¿Deseas continuar con tu reserva? ✅`;
+  }
+
+  // Si solamente envía el nombre, continúa con el flujo normal
+  clientState.get(from).name = rawText;
+  clientState.get(from).step = "NUMBER_OF_PEOPLE";
+
+  return `¡Gracias, ${rawText}! 😊
 
 ¿Cuántas personas serán para tu visita? 👥`;
-  }
+}
     // Capturar número de personas
   if (state.step === "NUMBER_OF_PEOPLE") {
     const people = parseInt(rawText, 10);
