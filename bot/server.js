@@ -130,15 +130,32 @@ const text = rawText?.toLowerCase();
     if (!clientState.has(from)) {
   clientState.set(from, {});
 } 
-    if (
+   if (
   text.includes("experiencia básico") ||
   text.includes("experiencia basico")
 ) {
   clientState.get(from).experience = "BASIC";
   clientState.get(from).location = "CASA TORTUGA";
-  clientState.get(from).step = "LANGUAGE";
+  clientState.get(from).language = "ES";
+  clientState.get(from).step = "EXPERIENCE_SELECTED";
+
   console.log("🐢 Experiencia detectada: BASIC - CASA TORTUGA");
-  }
+  console.log("🇲🇽 Idioma detectado: ESPAÑOL");
+}
+
+if (
+  text.includes("basic experience") ||
+  text.includes("basic") &&
+  text.includes("casa tortuga")
+) {
+  clientState.get(from).experience = "BASIC";
+  clientState.get(from).location = "CASA TORTUGA";
+  clientState.get(from).language = "EN";
+  clientState.get(from).step = "EXPERIENCE_SELECTED";
+
+  console.log("🐢 Experience detected: BASIC - CASA TORTUGA");
+  console.log("🇺🇸 Language detected: ENGLISH");
+}
   console.log("🧠 Estado actual:", clientState.get(from));
 
     const reply = getReply(text, from, rawText);
@@ -164,6 +181,49 @@ function getReply(text, from, rawText) {
   const state = clientState.get(from) || {};
   const selectedExperience = state.experience;
   const selectedLocation = state.location;
+// Experiencia seleccionada desde la página web
+if (
+  state.step === "EXPERIENCE_SELECTED" &&
+  selectedExperience === "BASIC" &&
+  selectedLocation === "CASA TORTUGA"
+) {
+
+  clientState.get(from).step = "NAME";
+
+  if (state.language === "EN") {
+
+    return `🐢 BASIC — CASA TORTUGA
+
+✅ Guided tour through 4 cenotes
+🌊 2 open cenotes + 2 cave cenotes
+🦺 Life jacket
+👨‍🏫 Certified guide
+
+💰 $650 MXN per person
+
+To continue with your reservation, please send us:
+
+👤 Full name
+👥 Number of guests
+📅 Visit date`;
+
+  }
+
+  return `🐢 BASIC — CASA TORTUGA
+
+✅ Recorrido guiado por 4 cenotes
+🌊 2 abiertos + 2 tipo cueva
+🦺 Chaleco salvavidas
+👨‍🏫 Guía certificado
+
+💰 $650 MXN por persona
+
+Para continuar con tu reserva, envíanos:
+
+👤 Nombre y apellido
+👥 Número de personas
+📅 Fecha de visita`;
+}
 // Capturar nombre y detectar datos completos
 if (state.step === "NAME") {
 
@@ -312,7 +372,7 @@ https://cenotexperince.github.io/CTE-Web/video.html`;
       selectedExperience === "BASIC" &&
       selectedLocation === "CASA TORTUGA"
     ) {
-       clientState.get(from).step = "NAME";
+       clientState.get(from).step = "EXPERIENCE_SELECTED";
 
             return `🇲🇽 ¡Perfecto! Continuaremos en español. 😊
 
@@ -342,7 +402,26 @@ https://cenotexperince.github.io/CTE-Web/video.html`;
     text === "básico"
   ) {
 
-    return `🐢 BASIC — CASA TORTUGA
+    if (state.language === "EN") {
+
+  return `🐢 BASIC — CASA TORTUGA
+
+✅ Guided tour through 4 cenotes
+🌊 2 open cenotes + 2 cave cenotes
+🦺 Life jacket
+👨‍🏫 Certified guide
+
+💰 $650 MXN per person
+
+To continue with your reservation, please send us:
+
+👤 Full name
+👥 Number of guests
+📅 Visit date`;
+
+}
+
+return `🐢 BASIC — CASA TORTUGA
 
 ✅ Recorrido guiado por 4 cenotes
 🌊 2 abiertos + 2 tipo cueva
@@ -351,12 +430,13 @@ https://cenotexperince.github.io/CTE-Web/video.html`;
 
 💰 $650 MXN por persona
 
-Para continuar envíanos:
+Para continuar con tu reserva, envíanos:
 
 👤 Nombre y apellido
 👥 Número de personas
 📅 Fecha de visita`;
-  }
+}
+
 
   // SILVER
 
