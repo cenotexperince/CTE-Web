@@ -173,6 +173,43 @@ function getReply(text, from, rawText) {
 
 ¿Deseas continuar con tu reserva? ✅`;
   }
+    // Confirmar reserva
+  if (state.step === "CONFIRMATION") {
+
+    if (
+      text === "sí" ||
+      text === "si"
+    ) {
+      clientState.get(from).step = "COMPLETED";
+
+      return `🎉 ¡Excelente!
+
+Tu solicitud de reserva ha sido confirmada. 🌴🐢
+
+👤 ${clientState.get(from).name}
+👥 ${clientState.get(from).people} personas
+📅 ${clientState.get(from).date}
+
+Nos vemos en Casa Tortuga. 💦🌴
+
+¡Gracias por elegir Cenotes Experience Tulum!`;
+    }
+
+    if (text === "no") {
+      clientState.get(from).step = "CANCELLED";
+
+      return `👍 No hay problema.
+
+Tu solicitud no ha sido confirmada.
+
+Si deseas iniciar nuevamente tu reserva, escríbenos cuando gustes. 🌴🐢`;
+    }
+
+    return `Por favor responde:
+
+✅ SÍ — Confirmar reserva
+❌ NO — Cancelar`;
+  }
   // Idioma inglés
 
   if (
