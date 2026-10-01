@@ -12,6 +12,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 const clientState = new Map();
+const processedMessages = new Set();
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
 const PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID;
@@ -94,22 +95,22 @@ app.post("/webhook", async (req, res) => {
   res.sendStatus(200);
 
   try {
-
     const body = req.body;
 
-    console.log(
-      "📩 Evento recibido:",
-      JSON.stringify(body, null, 2)
-    );
+    const message = body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
 
-    const message =
-      body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+if (!message) {
+  return;
+}
 
-    if (!message) {
-      return;
-    }
+if (processedMessages.has(message.id)) {
+  console.log("🔁 Mensaje duplicado ignorado:", message.id);
+  return;
+}
 
-    let from = message.from;
+processedMessages.add(message.id);
+
+let from = message.from;
 
     if (from.startsWith("521")) {
        from = "52" + from.slice(3);
@@ -241,11 +242,12 @@ if (state.step === "NAME") {
       return `Por favor, indícanos un número válido de personas. 👥`;
     }
 
+ clientState.get(from).name = name;
+ clientState.get(from).people = people;
  clientState.get(from).date = date;
 
-clientState.get(from).step = "CONFIRMATION";
-
-if (state.language === "EN") {
+ clientState.get(from).step = "CONFIRMATION";
+ if (state.language === "EN") {
 
   return `📋 Reservation summary:
 
