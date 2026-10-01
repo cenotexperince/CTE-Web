@@ -241,25 +241,41 @@ if (state.step === "NAME") {
       return `Por favor, indícanos un número válido de personas. 👥`;
     }
 
-    clientState.get(from).name = name;
-    clientState.get(from).people = people;
-    clientState.get(from).date = date;
-    clientState.get(from).step = "CONFIRMATION";
+ clientState.get(from).date = date;
 
-    return `📋 Resumen de tu reserva:
+clientState.get(from).step = "CONFIRMATION";
+
+if (state.language === "EN") {
+
+  return `📋 Reservation summary:
+
+👤 ${name}
+👥 ${people} guests
+📅 ${date}
+
+Would you like to continue with your reservation? ✅
+
+✅ YES — Confirm reservation
+❌ NO — Cancel reservation`;
+
+}
+
+return `📋 Resumen de tu reserva:
 
 👤 ${name}
 👥 ${people} personas
 📅 ${date}
 
-¿Deseas continuar con tu reserva? ✅`;
-  }
+¿Deseas continuar con tu reserva? ✅
 
-  // Si solamente envía el nombre, continúa con el flujo normal
-  clientState.get(from).name = rawText;
-  clientState.get(from).step = "NUMBER_OF_PEOPLE";
+✅ SÍ — Confirmar reserva
+❌ NO — Cancelar`;
+}
+// Si solamente envía el nombre, continúa con el flujo normal
+clientState.get(from).name = rawText;
+clientState.get(from).step = "NUMBER_OF_PEOPLE";
 
-  return `¡Gracias, ${rawText}! 😊
+return `¡Gracias, ${rawText}! 😊
 
 ¿Cuántas personas serán para tu visita? 👥`;
 }
@@ -270,8 +286,6 @@ if (state.step === "NAME") {
     if (isNaN(people) || people < 1) {
       return `Por favor, indícanos un número válido de personas. 👥`;
     }
-
-
 
     clientState.get(from).people = people;
     clientState.get(from).step = "DATE";
@@ -293,19 +307,36 @@ if (state.step === "NAME") {
 ¿Deseas continuar con tu reserva? ✅`;
   }
     // Confirmar reserva
-  if (state.step === "CONFIRMATION") {
+if (state.step === "CONFIRMATION") {
 
-    if (
-      text === "sí" ||
-      text === "si"
-    ) {
-       
-      const folio = getNextFolio();
-      clientState.get(from).folio = folio;
+  if (
+    text === "sí" ||
+    text === "si" ||
+    text === "yes"
+  ) {
 
-      clientState.get(from).step = "COMPLETED";
+    const folio = getNextFolio();
+    clientState.get(from).folio = folio;
 
-      return `🎉 ¡Excelente!
+    clientState.get(from).step = "COMPLETED";
+
+    if (state.language === "EN") {
+      return `🎉 Excellent!
+
+Your reservation request has been confirmed. 🌴🐢
+
+🆔 Folio: ${folio}
+
+👤 ${clientState.get(from).name}
+👥 ${clientState.get(from).people} guests
+📅 ${clientState.get(from).date}
+
+See you at Casa Tortuga! 💦🌴
+
+Thank you for choosing Cenotes Experience Tulum!`;
+    }
+
+    return `🎉 ¡Excelente!
 
 Tu solicitud de reserva ha sido confirmada. 🌴🐢
 
@@ -318,24 +349,37 @@ Tu solicitud de reserva ha sido confirmada. 🌴🐢
 Nos vemos en Casa Tortuga. 💦🌴
 
 ¡Gracias por elegir Cenotes Experience Tulum!`;
+  }
+
+  if (text === "no") {
+
+    clientState.get(from).step = "CANCELLED";
+
+    if (state.language === "EN") {
+      return `👍 No problem.
+
+Your reservation request has been cancelled.`;
     }
 
-    if (text === "no") {
-      clientState.get(from).step = "CANCELLED";
+    return `👍 No hay problema.
 
-      return `👍 No hay problema.
+Tu solicitud de reserva ha sido cancelada.`;
+  }
 
-Tu solicitud no ha sido confirmada.
+  if (state.language === "EN") {
+    return `Please reply:
 
-Si deseas iniciar nuevamente tu reserva, escríbenos cuando gustes. 🌴🐢`;
-    }
+✅ YES — Confirm reservation
 
-    return `Por favor responde:
+❌ NO — Cancel reservation`;
+  }
+
+  return `Por favor responde:
 
 ✅ SÍ — Confirmar reserva
+
 ❌ NO — Cancelar`;
-  }
-  // Idioma inglés
+}
 
   if (
     text === "english" ||
