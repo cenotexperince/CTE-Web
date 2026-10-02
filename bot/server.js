@@ -145,9 +145,12 @@ const text = rawText?.toLowerCase();
 }
 
 if (
-  text.includes("basic experience") ||
-  text.includes("basic") &&
-  text.includes("casa tortuga")
+  !text.includes("experiencia básico") &&
+  !text.includes("experiencia basico") &&
+  (
+    text.includes("basic experience") ||
+    (text.includes("basic") && text.includes("casa tortuga"))
+  )
 ) {
   clientState.get(from).experience = "BASIC";
   clientState.get(from).location = "CASA TORTUGA";
