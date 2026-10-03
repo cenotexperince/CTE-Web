@@ -366,9 +366,59 @@ button:active {
     font-weight: bold;
     color: #0d7c66;
 
-    margin: 25px 0 20px;
+    margin: 12px 0 20px;
+}
+/* Precio normal en taquilla */
+.precio .precio-anterior {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
+.precio .precio-anterior small {
+    font-size: 15px;
+    font-weight: 600;
+    color: #c69a24;
+    text-decoration: none;
+    margin-bottom: 3px;
+}
+
+.precio .precio-anterior strong {
+    display: block;
+    font-size: 32px;
+    font-weight: 800;
+    color: #c69a24;
+    text-decoration: line-through !important;
+    text-decoration-color: #c69a24 !important;
+}
+
+/* Precio promocional */
+.precio .precio-oferta {
+    display: block;
+    font-size: 50px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #d96b63;
+}
+
+.precio .precio-oferta small {
+    font-size: 16px;
+    color: #777;
+}
+
+/* Etiqueta promocional */
+.precio .etiqueta-oferta {
+    display: block;
+    width: fit-content;
+    margin: 10px auto 0;
+    padding: 5px 12px;
+    background: #e64b35;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 20px;
+}
 .precio small {
     font-size: 14px;
     color: #666;
