@@ -131,9 +131,11 @@ const text = rawText?.toLowerCase();
     if (!clientState.has(from)) {
   clientState.set(from, {});
 } 
-   if (
+if (
   text.includes("experiencia básico") ||
-  text.includes("experiencia basico")
+  text.includes("experiencia basico") ||
+  text.includes("experiencia básica") ||
+  text.includes("experiencia basica")
 ) {
   clientState.get(from).experience = "BASIC";
   clientState.get(from).location = "CASA TORTUGA";
@@ -147,6 +149,8 @@ const text = rawText?.toLowerCase();
 if (
   !text.includes("experiencia básico") &&
   !text.includes("experiencia basico") &&
+  !text.includes("experiencia básica") &&
+  !text.includes("experiencia basica") &&
   (
     text.includes("basic experience") ||
     (text.includes("basic") && text.includes("casa tortuga"))
@@ -203,7 +207,8 @@ if (
 🦺 Life jacket
 👨‍🏫 Certified guide
 
-💰 $650 MXN per person
+🏷️ Box office price: $650 MXN
+🔥 SPECIAL PRICE: $350 MXN per person
 
 To continue with your reservation, please send us:
 
@@ -220,7 +225,8 @@ To continue with your reservation, please send us:
 🦺 Chaleco salvavidas
 👨‍🏫 Guía certificado
 
-💰 $650 MXN por persona
+ 🏷️ Precio normal en taquilla: $650 MXN
+🔥 PRECIO ESPECIAL: $350 MXN por persona
 
 Para continuar con tu reserva, envíanos:
 
@@ -249,20 +255,24 @@ if (state.step === "NAME") {
  clientState.get(from).people = people;
  clientState.get(from).date = date;
 
- clientState.get(from).step = "CONFIRMATION";
- if (state.language === "EN") {
+clientState.get(from).step = "CONFIRMATION";
 
+const deposit = people * 100;
+clientState.get(from).deposit = deposit;
+
+if (state.language === "EN") {
   return `📋 Reservation summary:
 
 👤 ${name}
 👥 ${people} guests
 📅 ${date}
 
+💵 Required deposit: $${deposit} MXN
+
 Would you like to continue with your reservation? ✅
 
 ✅ YES — Confirm reservation
 ❌ NO — Cancel reservation`;
-
 }
 
 return `📋 Resumen de tu reserva:
@@ -270,6 +280,8 @@ return `📋 Resumen de tu reserva:
 👤 ${name}
 👥 ${people} personas
 📅 ${date}
+
+💵 Depósito requerido: $${deposit} MXN
 
 ¿Deseas continuar con tu reserva? ✅
 
@@ -321,14 +333,15 @@ if (state.step === "CONFIRMATION") {
   ) {
 
     const folio = getNextFolio();
-    clientState.get(from).folio = folio;
+  clientState.get(from).folio = folio;
 
-    clientState.get(from).step = "COMPLETED";
+  clientState.get(from).step = "PENDING_DEPOSIT";
+  clientState.get(from).status = "PENDING_DEPOSIT";
 
     if (state.language === "EN") {
-      return `🎉 Excellent!
+  return `🎉 Excellent!
 
-Your reservation request has been confirmed. 🌴🐢
+Your reservation request has been received. 🌴🐢
 
 🆔 Folio: ${folio}
 
@@ -336,14 +349,26 @@ Your reservation request has been confirmed. 🌴🐢
 👥 ${clientState.get(from).people} guests
 📅 ${clientState.get(from).date}
 
-See you at Casa Tortuga! 💦🌴
+💵 Deposit required: $200 MXN
 
-Thank you for choosing Cenotes Experience Tulum!`;
-    }
+🏦 Please make your deposit to:
 
-    return `🎉 ¡Excelente!
+Account: 646180401611293422
+Bank: STP
+Account holder: Gabriel Victorio
 
-Tu solicitud de reserva ha sido confirmada. 🌴🐢
+📲 Send us your payment receipt for verification.
+
+🎟️ Once your deposit is confirmed, we will send your voucher.
+
+💦 The remaining balance is paid at the ticket office.
+
+Thank you for choosing Cenotes Experience Tulum! 🌴`;
+}
+
+return `🎉 ¡Excelente!
+
+Hemos recibido tu solicitud de reserva. 🌴🐢
 
 🆔 Folio: ${folio}
 
@@ -351,11 +376,23 @@ Tu solicitud de reserva ha sido confirmada. 🌴🐢
 👥 ${clientState.get(from).people} personas
 📅 ${clientState.get(from).date}
 
-Nos vemos en Casa Tortuga. 💦🌴
+💵 Depósito requerido: $200 MXN
 
-¡Gracias por elegir Cenotes Experience Tulum!`;
-  }
+🏦 Realiza tu depósito a los siguientes datos:
 
+Cuenta: 646180401611293422
+Banco: STP
+Titular: Gabriel Victorio
+
+📲 Envíanos tu comprobante de pago para verificarlo.
+
+🎟️ Una vez confirmado tu depósito, te enviaremos tu voucher.
+
+💦 El saldo restante se liquida directamente en taquilla.
+
+¡Gracias por elegir Cenotes Experience Tulum! 🌴`;
+
+}
   if (text === "no") {
 
     clientState.get(from).step = "CANCELLED";
@@ -435,11 +472,17 @@ Por favor indícanos:
 👥 Número de personas
 📅 Fecha de visita`;
     }
-  return `  
-Después te ayudaremos a elegir tu experiencia.
+  state.language = "ES";
 
-🎥 Conoce nuestra experiencia:
-https://cenotexperince.github.io/CTE-Web/video.html`;
+return `🇲🇽 ¡Perfecto! Continuaremos en español. 😊
+
+🌴 Estas son nuestras experiencias en Casa Tortuga:
+
+1️⃣ Básico
+2️⃣ Silver
+3️⃣ Gold
+
+🐢 Escribe el nombre o número de la experiencia que te interesa y te compartimos sus precios y detalles. 💦`;
   }
 
   // BASIC
@@ -460,7 +503,8 @@ https://cenotexperince.github.io/CTE-Web/video.html`;
 🦺 Life jacket
 👨‍🏫 Certified guide
 
-💰 $650 MXN per person
+state.experience =🏷️ Box office price: $650 MXN
+🔥 SPECIAL PRICE: $350 MXN per person
 
 To continue with your reservation, please send us:
 
@@ -477,7 +521,8 @@ return `🐢 BASIC — CASA TORTUGA
 🦺 Chaleco salvavidas
 👨‍🏫 Guía certificado
 
-💰 $650 MXN por persona
+🏷️ Precio normal en taquilla: $650 MXN
+🔥 PRECIO ESPECIAL: $350 MXN por persona
 
 Para continuar con tu reserva, envíanos:
 
