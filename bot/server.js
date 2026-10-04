@@ -209,6 +209,7 @@ if (
 
 🏷️ Box office price: $650 MXN
 🔥 SPECIAL PRICE: $350 MXN per person
+💳 A $100 MXN deposit per person is required.
 
 To continue with your reservation, please send us:
 
@@ -225,11 +226,11 @@ To continue with your reservation, please send us:
 🦺 Chaleco salvavidas
 👨‍🏫 Guía certificado
 
- 🏷️ Precio normal en taquilla: $650 MXN
+🏷️ Precio normal en taquilla: $650 MXN
 🔥 PRECIO ESPECIAL: $350 MXN por persona
+💳 Realizando un depósito de $100 MXN por persona.
 
 Para continuar con tu reserva, envíanos:
-
 👤 Nombre y apellido
 👥 Número de personas
 📅 Fecha de visita`;
@@ -258,6 +259,11 @@ if (state.step === "NAME") {
 clientState.get(from).step = "CONFIRMATION";
 
 const deposit = people * 100;
+const total = people * 350;
+const balance = total - deposit;
+
+clientState.get(from).total = total;
+clientState.get(from).balance = balance;
 clientState.get(from).deposit = deposit;
 
 if (state.language === "EN") {
@@ -267,7 +273,11 @@ if (state.language === "EN") {
 👥 ${people} guests
 📅 ${date}
 
+💰 Total: $${total} MXN
+
 💵 Required deposit: $${deposit} MXN
+
+🏦 Balance at ticket office: $${balance} MXN
 
 Would you like to continue with your reservation? ✅
 
@@ -281,7 +291,11 @@ return `📋 Resumen de tu reserva:
 👥 ${people} personas
 📅 ${date}
 
+💰 Total: $${total} MXN
+
 💵 Depósito requerido: $${deposit} MXN
+
+🏦 Saldo en taquilla: $${balance} MXN
 
 ¿Deseas continuar con tu reserva? ✅
 
@@ -331,7 +345,14 @@ if (state.step === "CONFIRMATION") {
     text === "si" ||
     text === "yes"
   ) {
+  const people = clientState.get(from).people;
+const deposit = people * 100;
+const total = people * 350;
+const balance = total - deposit;
 
+clientState.get(from).total = total;
+clientState.get(from).deposit = deposit;
+clientState.get(from).balance = balance;
     const folio = getNextFolio();
   clientState.get(from).folio = folio;
 
@@ -349,7 +370,11 @@ Your reservation request has been received. 🌴🐢
 👥 ${clientState.get(from).people} guests
 📅 ${clientState.get(from).date}
 
-💵 Deposit required: $200 MXN
+💰 Total: $${total} MXN
+
+💵 Deposit required: $${deposit} MXN
+
+🏦 Balance at ticket office: $${balance} MXN
 
 🏦 Please make your deposit to:
 
@@ -376,7 +401,11 @@ Hemos recibido tu solicitud de reserva. 🌴🐢
 👥 ${clientState.get(from).people} personas
 📅 ${clientState.get(from).date}
 
-💵 Depósito requerido: $200 MXN
+💰 Total: $${total} MXN
+
+💵 Depósito requerido: $${deposit} MXN
+
+🏦 Saldo en taquilla: $${balance} MXN
 
 🏦 Realiza tu depósito a los siguientes datos:
 
