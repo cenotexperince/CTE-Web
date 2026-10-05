@@ -1,2 +1,4 @@
 node_modules/
 .env
+# Comprobantes de pago recibidos por WhatsApp
+comprobantes/

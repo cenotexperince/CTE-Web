@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { generateVoucher } from "./voucher.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ const processedMessages = new Set();
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
 const PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID;
+const ADMIN_KEY = process.env.ADMIN_KEY;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -56,6 +58,99 @@ app.get("/health", (req, res) => {
     status: "ok",
     service: "CET Bot"
   });
+});
+// --------------------------------------------------
+// CONFIRMAR PAGO - ADMINISTRACIÓN
+// --------------------------------------------------
+
+app.post("/admin/confirm-payment", async (req, res) => {
+
+  try {
+
+    const adminKey = req.headers["x-admin-key"];
+    const { folio } = req.body;
+
+    // Verificar clave administrativa
+    if (!adminKey || adminKey !== ADMIN_KEY) {
+
+      console.log("❌ Intento de acceso administrativo no autorizado");
+
+      return res.status(401).json({
+        ok: false,
+        error: "No autorizado"
+      });
+    }
+
+    // Verificar que exista el folio
+    if (!folio) {
+
+      return res.status(400).json({
+        ok: false,
+        error: "Falta el folio"
+      });
+    }
+
+    // Buscar la reserva en memoria
+    const reservation = [...clientState.values()]
+      .find(state => state.folio === folio);
+
+    if (!reservation) {
+
+      return res.status(404).json({
+        ok: false,
+        error: "Folio no encontrado"
+      });
+    }
+
+    console.log(`🔎 Solicitud de confirmación para ${folio}`);
+    console.log("📋 Estado actual:", reservation.status);
+
+    // Solo se puede confirmar un comprobante recibido
+    if (reservation.status !== "RECEIPT_RECEIVED") {
+
+      return res.status(409).json({
+        ok: false,
+        error: "La reserva no está pendiente de confirmación de pago",
+        status: reservation.status
+      });
+    }
+
+    // Confirmar el pago
+    reservation.status = "PAYMENT_CONFIRMED";
+
+    reservation.paymentConfirmedAt =
+      new Date().toISOString();
+
+    console.log(`🟢 PAGO CONFIRMADO: ${folio}`);
+    console.log(
+      `📅 Fecha de confirmación: ${reservation.paymentConfirmedAt}`
+    );
+
+    return res.json({
+      ok: true,
+      message: "Pago confirmado correctamente",
+      folio: reservation.folio,
+      status: reservation.status,
+      name: reservation.name,
+      people: reservation.people,
+      total: reservation.total,
+      deposit: reservation.deposit,
+      balance: reservation.balance,
+      comprobante: reservation.comprobante
+    });
+
+  } catch (error) {
+
+    console.error(
+      "❌ Error confirmando pago:",
+      error
+    );
+
+    return res.status(500).json({
+      ok: false,
+      error: "Error interno del servidor"
+    });
+  }
 });
 
 // ----------------------------------------------------
@@ -116,15 +211,146 @@ let from = message.from;
        from = "52" + from.slice(3);
     }
 
-    const rawText =
-  message?.text?.body
-    ?.trim();
-
+    const rawText = message?.text?.body?.trim();
 const text = rawText?.toLowerCase();
+const messageType = message?.type;
 
-    if (!text) {
+// 📎 RECEPCIÓN DE COMPROBANTE DE PAGO
+if (messageType === "image" || messageType === "document") {
+
+  const state = clientState.get(from);
+
+  console.log("📎 Comprobante recibido");
+  console.log("📄 Tipo:", messageType);
+  console.log("🆔 Media ID:", message[messageType]?.id);
+  console.log("📋 Estado del cliente:", state || {});
+
+  // --------------------------------------------------
+  // VERIFICAR QUE EXISTA UNA RESERVA PENDIENTE
+  // --------------------------------------------------
+
+  if (state?.folio && state?.status === "PENDING_DEPOSIT") {
+
+    const mediaId = message[messageType]?.id;
+
+    if (!mediaId) {
+      console.error("❌ No se encontró Media ID en el mensaje.");
       return;
     }
+
+    console.log(`💰 Comprobante asociado al folio ${state.folio}`);
+
+    // --------------------------------------------------
+    // DETERMINAR EXTENSIÓN DEL ARCHIVO
+    // --------------------------------------------------
+
+    let extension = "jpg";
+
+    if (messageType === "document") {
+
+      const originalFilename =
+        message.document?.filename || "";
+
+      const originalExtension =
+        path.extname(originalFilename).replace(".", "").toLowerCase();
+
+      if (originalExtension) {
+        extension = originalExtension;
+      }
+
+    } else {
+
+      const mimeType =
+        message.image?.mime_type || "image/jpeg";
+
+      const mimeExtension =
+        mimeType.split("/")[1];
+
+      if (mimeExtension) {
+        extension = mimeExtension === "jpeg"
+          ? "jpg"
+          : mimeExtension;
+      }
+    }
+
+    // --------------------------------------------------
+    // NOMBRE DEL ARCHIVO
+    // --------------------------------------------------
+
+    const filename =
+      `${state.folio}-comprobante.${extension}`;
+
+    const outputPath =
+      path.join(__dirname, "comprobantes", filename);
+
+    console.log("📁 Archivo destino:", outputPath);
+
+    // --------------------------------------------------
+    // DESCARGAR COMPROBANTE DESDE WHATSAPP
+    // --------------------------------------------------
+
+    const downloadedFile =
+      await downloadWhatsAppMedia(
+        mediaId,
+        outputPath
+      );
+
+    if (!downloadedFile) {
+
+      await sendWhatsAppMessage(
+        from,
+        "⚠️ Recibimos tu comprobante, pero tuvimos un problema al descargarlo.\n\n" +
+        "Por favor, vuelve a enviarlo. 😊"
+      );
+
+      return;
+    }
+
+    console.log("✅ Comprobante guardado correctamente");
+    console.log(`📋 Folio: ${state.folio}`);
+    console.log(`📁 Archivo: ${downloadedFile.path}`);
+
+    // --------------------------------------------------
+// ACTUALIZAR ESTADO DE LA RESERVA
+// --------------------------------------------------
+
+state.status = "RECEIPT_RECEIVED";
+state.comprobante = downloadedFile.path;
+
+console.log("🟡 Estado actualizado: RECEIPT_RECEIVED");
+console.log(`📎 Comprobante: ${state.comprobante}`);
+
+    // --------------------------------------------------
+    // CONFIRMAR RECEPCIÓN AL CLIENTE
+    // --------------------------------------------------
+
+    await sendWhatsAppMessage(
+      from,
+      `📎 ¡Comprobante recibido correctamente! ✅\n\n` +
+      `📋 Folio: ${state.folio}\n` +
+      `👤 Nombre: ${state.name || ""}\n\n` +
+      `💰 Hemos recibido tu comprobante de pago.\n` +
+      `Nuestro equipo lo revisará y, una vez confirmado tu depósito, te enviaremos tu voucher de reserva. 🌴🐢`
+    );
+
+    return;
+  }
+
+  // --------------------------------------------------
+  // SI NO EXISTE UNA RESERVA PENDIENTE
+  // --------------------------------------------------
+
+  await sendWhatsAppMessage(
+    from,
+    "📎 Recibimos tu archivo.\n\n" +
+    "Para poder asociarlo correctamente a una reserva, primero necesitamos tener tu folio de reserva. 😊"
+  );
+
+  return;
+}
+
+if (!text) return;
+    
 
     console.log(`📱 Cliente: ${from}`);
     console.log(`💬 Mensaje: ${text}`);
@@ -663,6 +889,185 @@ async function sendWhatsAppMessage(to, message) {
     data
   );
 }
+// ----------------------------------------------------
+// ENVIAR DOCUMENTO PDF A WHATSAPP
+// ----------------------------------------------------
+async function downloadWhatsAppMedia(mediaId, outputPath) {
+  try {
+    console.log("⬇️ Obteniendo información del archivo...");
+    console.log("🆔 Media ID:", mediaId);
+
+    // 1. Obtener la URL temporal del archivo
+    const mediaResponse = await fetch(
+      `https://graph.facebook.com/v25.0/${mediaId}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${WHATSAPP_TOKEN}`
+        }
+      }
+    );
+
+    const mediaData = await mediaResponse.json();
+
+    if (!mediaResponse.ok) {
+      console.error("❌ Error obteniendo media:", mediaData);
+      return null;
+    }
+
+    const mediaUrl = mediaData.url;
+    const mimeType = mediaData.mime_type;
+
+    console.log("🔗 URL de media obtenida");
+    console.log("📄 Tipo:", mimeType);
+
+    // 2. Descargar el archivo real
+    const fileResponse = await fetch(mediaUrl, {
+      headers: {
+        "Authorization": `Bearer ${WHATSAPP_TOKEN}`
+      }
+    });
+
+    if (!fileResponse.ok) {
+      console.error(
+        "❌ Error descargando archivo:",
+        fileResponse.status,
+        await fileResponse.text()
+      );
+      return null;
+    }
+
+    // 3. Convertir la respuesta en buffer
+    const arrayBuffer = await fileResponse.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // 4. Crear carpeta si no existe
+    const directory = path.dirname(outputPath);
+
+    if (!fs.existsSync(directory)) {
+      fs.mkdirSync(directory, { recursive: true });
+    }
+
+    // 5. Guardar archivo
+    fs.writeFileSync(outputPath, buffer);
+
+    console.log("✅ Archivo guardado:", outputPath);
+    console.log("📦 Tamaño:", buffer.length, "bytes");
+
+    return {
+      path: outputPath,
+      mimeType,
+      size: buffer.length
+    };
+
+  } catch (error) {
+    console.error("❌ Error descargando media:", error);
+    return null;
+  }
+}
+async function sendWhatsAppDocument(to, filePath, filename) {
+
+  try {
+
+    const fileBuffer = fs.readFileSync(filePath);
+
+    const formData = new FormData();
+
+    formData.append(
+      "messaging_product",
+      "whatsapp"
+    );
+
+    formData.append(
+      "file",
+      new Blob([fileBuffer], {
+        type: "application/pdf"
+      }),
+      filename
+    );
+
+    const uploadResponse = await fetch(
+      `https://graph.facebook.com/v25.0/${PHONE_NUMBER_ID}/media`,
+      {
+        method: "POST",
+
+        headers: {
+          "Authorization":
+            `Bearer ${WHATSAPP_TOKEN}`
+        },
+
+        body: formData
+      }
+    );
+
+    const uploadData = await uploadResponse.json();
+
+    if (!uploadResponse.ok) {
+      console.error(
+        "❌ Error subiendo voucher:",
+        uploadData
+      );
+      return;
+    }
+
+    const mediaId = uploadData.id;
+
+    console.log(
+      "✅ Voucher subido a WhatsApp:",
+      mediaId
+    );
+
+    const sendResponse = await fetch(
+      `https://graph.facebook.com/v25.0/${PHONE_NUMBER_ID}/messages`,
+      {
+        method: "POST",
+
+        headers: {
+          "Authorization":
+            `Bearer ${WHATSAPP_TOKEN}`,
+
+          "Content-Type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          recipient_type: "individual",
+          to: to,
+
+          type: "document",
+
+          document: {
+            id: mediaId,
+            filename: filename
+          }
+        })
+      }
+    );
+
+    const sendData = await sendResponse.json();
+
+    if (!sendResponse.ok) {
+      console.error(
+        "❌ Error enviando voucher:",
+        sendData
+      );
+      return;
+    }
+
+    console.log(
+      "✅ Voucher enviado por WhatsApp:",
+      sendData
+    );
+
+  } catch (error) {
+
+    console.error(
+      "❌ Error enviando documento:",
+      error
+    );
+
+  }
+}
 // ------------------------------------------------------------
 // WEBHOOK DE 2CHAT - MENSAJES WABA RECIBIDOS
 // ------------------------------------------------------------
@@ -682,7 +1087,6 @@ app.post("/webhook/2chat", async (req, res) => {
       console.log("ℹ️ Evento ignorado: no viene de un cliente");
       return;
     }
-
     const from = event.remote_phone_number;
     const message = event.message?.text?.trim();
 
