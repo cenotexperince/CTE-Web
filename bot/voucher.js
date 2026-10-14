@@ -1,6 +1,10 @@
 import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function generateVoucher(data, outputPath) {
   return new Promise((resolve, reject) => {
@@ -21,15 +25,15 @@ function generateVoucher(data, outputPath) {
       .lineWidth(1.5)
       .stroke("#222222");
 
-    doc.font("Helvetica-Bold")
-      .fontSize(23)
-      .text("CENOTES", 65, 55);
+   
+    // Logo oficial de Casa Tortuga
 
-    doc.fontSize(20)
-      .text("CASA TORTUGA", 65, 83);
+const logoPath = path.resolve(__dirname, "../img/img-logo-casa-tortuga.png");
 
-    doc.fontSize(12)
-      .text("TULUM", 65, 109);
+doc.image(logoPath, 30, 8, {
+  fit: [450, 155]
+});
+
 
     // Folio
     doc.roundedRect(390, 52, 135, 65, 12).stroke();
@@ -97,7 +101,7 @@ function generateVoucher(data, outputPath) {
     doc.roundedRect(left, 550, pageWidth, 125, 12).stroke();
 
    // Insertar mapa de Casa Tortuga
-const mapPath = path.resolve("../img/mapa-casa-tortuga.png");
+const mapPath = path.resolve(__dirname, "../img/mapa-casa-tortuga.png");
 
 doc.image(mapPath, left - 20, 552, {
   fit: [pageWidth + 30, 120],
