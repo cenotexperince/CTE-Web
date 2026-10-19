@@ -124,13 +124,62 @@
         Basica, segura e inolvidable.
     </p>
 
+    
+<div class="reserva-anticipo">
+    <h4>Reserva tu Experiencia Básica</h4>
+
+    <label for="nombre-basico">Nombre y apellido</label>
+    <input
+        type="text"
+        id="nombre-basico"
+        placeholder="Nombre completo"
+        autocomplete="name"
+        required
+    >
+
+    <label for="personas-basico">Número de personas</label>
+    <select id="personas-basico" required>
+        <option value="1">1 persona</option>
+        <option value="2" selected>2 personas</option>
+        <option value="3">3 personas</option>
+        <option value="4">4 personas</option>
+        <option value="5">5 personas</option>
+        <option value="6">6 personas</option>
+        <option value="7">7 personas</option>
+        <option value="8">8 personas</option>
+        <option value="9">9 personas</option>
+        <option value="10">10 personas</option>
+    </select>
+
+    <label for="fecha-basico">Fecha de visita</label>
+    <input type="date" id="fecha-basico" required>
+
+    <p>Anticipo por persona: <strong>$100 MXN</strong></p>
+
+    <p>
+        Total del anticipo:
+        <strong id="total-anticipo-basico">$200 MXN</strong>
+    </p>
+
+    <button
+        type="button"
+        class="boton"
+        id="pagar-anticipo-basico"
+    >
+        Continuar al pago
+    </button>
+
+    <p id="mensaje-pago-basico" role="status"></p>
+
     <a
         href="https://api.whatsapp.com/send?phone=15551973757&text=Hola%2C%20me%20interesa%20la%20Experiencia%20Basico%20de%20Casa%20Tortuga."
         class="boton boton-whatsapp"
         target="_blank"
+        rel="noopener noreferrer"
     >
-        💬 Reserva ahora x WhatsApp
+        💬 Consultar por WhatsApp
     </a>
+</div>
 
 </div>
 
