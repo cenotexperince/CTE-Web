@@ -3476,3 +3476,128 @@ button:active {
     color: #7f625c !important;
 }
 
+/* =====================================
+   CET | FORMULARIO DE RESERVA PREMIUM
+   ===================================== */
+
+.reserva-anticipo {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 440px;
+    margin: 28px auto 12px;
+    padding: 26px 22px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(14, 125, 104, 0.18);
+    border-radius: 24px;
+    box-shadow: 0 12px 35px rgba(20, 70, 60, 0.12);
+    color: #243b36;
+    text-align: left;
+}
+
+.reserva-anticipo h4 {
+    margin: 0 0 22px;
+    color: #087d69;
+    font-size: 22px;
+    line-height: 1.35;
+    text-align: center;
+    font-weight: 700;
+}
+
+.reserva-anticipo label {
+    display: block;
+    margin: 17px 0 8px;
+    color: #354c46;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.reserva-anticipo input,
+.reserva-anticipo select {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border: 1px solid #d7e4df;
+    border-radius: 12px;
+    background: #f9fcfa;
+    color: #243b36;
+    font: inherit;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.reserva-anticipo input:focus,
+.reserva-anticipo select:focus {
+    border-color: #0b9278;
+    box-shadow: 0 0 0 3px rgba(11, 146, 120, 0.12);
+}
+
+.reserva-anticipo > p {
+    margin: 18px 0 0;
+    color: #536760;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.reserva-anticipo > p strong {
+    color: #087d69;
+}
+
+.reserva-anticipo #total-anticipo-basico {
+    display: inline-block;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+}
+
+.reserva-anticipo #pagar-anticipo-basico {
+    display: block;
+    width: 100%;
+    min-height: 52px;
+    margin: 24px 0 12px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0c9277, #076b5b);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 7px 18px rgba(8, 125, 105, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.reserva-anticipo #pagar-anticipo-basico:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(8, 125, 105, 0.25);
+}
+
+.reserva-anticipo .boton-whatsapp {
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 48px;
+    margin-top: 12px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 14px;
+}
+
+.reserva-anticipo #mensaje-pago-basico {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+    .reserva-anticipo {
+        padding: 22px 17px;
+        border-radius: 20px;
+    }
+
+    .reserva-anticipo h4 {
+        font-size: 20px;
+    }
+}
+
