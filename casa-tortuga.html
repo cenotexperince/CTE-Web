@@ -436,6 +436,30 @@
 
     </main>
 
-</body>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const personas = document.getElementById("personas-basico");
+    const total = document.getElementById("total-anticipo-basico");
 
-</html>
+    if (!personas || !total) return;
+
+    function actualizarAnticipo() {
+        const cantidad = Number(personas.value);
+        const anticipo = cantidad * 100;
+
+        total.textContent = anticipo.toLocaleString("es-MX", {
+            style: "currency",
+            currency: "MXN",
+            maximumFractionDigits: 0
+        }) + " MXN";
+    }
+
+    personas.addEventListener("change", actualizarAnticipo);
+    personas.addEventListener("input", actualizarAnticipo);
+    actualizarAnticipo();
+   });
+   </script>
+
+   </body>
+
+   </html>
