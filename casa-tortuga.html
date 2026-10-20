@@ -436,12 +436,20 @@
 
     </main>
 
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+    const nombre = document.getElementById("nombre-basico");
     const personas = document.getElementById("personas-basico");
+    const fecha = document.getElementById("fecha-basico");
     const total = document.getElementById("total-anticipo-basico");
+    const boton = document.getElementById("pagar-anticipo-basico");
+    const mensaje = document.getElementById("mensaje-pago-basico");
 
-    if (!personas || !total) return;
+    if (!nombre || !personas || !fecha || !total || !boton || !mensaje) {
+        console.error("No se encontraron todos los campos de reserva.");
+        return;
+    }
 
     function actualizarAnticipo() {
         const cantidad = Number(personas.value);
@@ -455,10 +463,79 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     personas.addEventListener("change", actualizarAnticipo);
-    personas.addEventListener("input", actualizarAnticipo);
     actualizarAnticipo();
-   });
-   </script>
+
+    boton.addEventListener("click", async function () {
+        const nombreCompleto = nombre.value.trim();
+        const cantidad = Number(personas.value);
+        const fechaVisita = fecha.value;
+
+        mensaje.textContent = "";
+
+        if (nombreCompleto.length < 3) {
+            mensaje.textContent = "Escribe tu nombre y apellido.";
+            nombre.focus();
+            return;
+        }
+
+        if (!Number.isInteger(cantidad) || cantidad < 1 || cantidad > 10) {
+            mensaje.textContent = "Selecciona entre 1 y 10 personas.";
+            personas.focus();
+            return;
+        }
+
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+
+        if (!fechaVisita || fechaVisita < [
+            hoy.getFullYear(),
+            String(hoy.getMonth() + 1).padStart(2, "0"),
+            String(hoy.getDate()).padStart(2, "0")
+        ].join("-")) {
+            mensaje.textContent = "Selecciona una fecha válida, desde hoy en adelante.";
+            fecha.focus();
+            return;
+        }
+
+        boton.disabled = true;
+        boton.textContent = "Preparando pago...";
+        mensaje.textContent = "Conectando con Mercado Pago de prueba…";
+
+        try {
+            const respuesta = await fetch("/api/create-preference", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: nombreCompleto,
+                    people: cantidad,
+                    visitDate: fechaVisita
+                })
+            });
+
+            const resultado = await respuesta.json();
+
+            if (!respuesta.ok || !resultado.ok || !resultado.paymentUrl) {
+                throw new Error(
+                    resultado.error || "No se pudo preparar el pago."
+                );
+            }
+
+            mensaje.textContent = "Abriendo el checkout de prueba…";
+            window.location.href = resultado.paymentUrl;
+
+        } catch (error) {
+            console.error("Error al preparar el anticipo:", error);
+            mensaje.textContent =
+                error.message || "No se pudo conectar. Intenta nuevamente.";
+        } finally {
+            boton.disabled = false;
+            boton.textContent = "Continuar al pago";
+        }
+    });
+});
+</script>
 
    </body>
 
