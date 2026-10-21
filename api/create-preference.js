@@ -133,12 +133,14 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
+    console.log("Respuesta de Mercado Pago:", JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       console.error(
-        "Mercado Pago rechazó la solicitud:",
-        response.status
-      );
+  "Mercado Pago rechazó la solicitud:",
+  response.status,
+  JSON.stringify(data, null, 2)
+);
 
       return res.status(502).json({
         ok: false,
