@@ -148,8 +148,8 @@ export default async function handler(req, res) {
       });
     }
 
-    const paymentUrl = data.sandbox_init_point;
-
+  const paymentUrl = data.init_point;
+    
     if (
       typeof paymentUrl !== "string" ||
       !paymentUrl.startsWith("https://")
