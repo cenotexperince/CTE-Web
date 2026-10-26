@@ -38,13 +38,21 @@ export default async function handler(req, res) {
     const pago = await respuesta.json();
 
     if (!respuesta.ok) {
-      console.error(
-        "No se pudo consultar el pago:",
-        respuesta.status
-      );
-      return res.status(502).json({ ok: false });
-    }
+  console.error(
+    "No se pudo consultar el pago:",
+    respuesta.status
+  );
 
+  if (respuesta.status === 404) {
+    return res.status(200).json({
+      ok: true,
+      ignored: true,
+      reason: "Pago no encontrado"
+    });
+  }
+
+  return res.status(502).json({ ok: false });
+}
     console.log("Notificación de Mercado Pago:", {
       paymentId: pago.id,
       status: pago.status,
