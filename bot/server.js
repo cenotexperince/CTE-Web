@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { generateVoucher } from "./voucher.js";
+import { supabase } from "./supabase.js";
 
 dotenv.config();
 
