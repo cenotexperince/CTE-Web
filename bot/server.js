@@ -351,13 +351,13 @@ console.log(`📎 Comprobante: ${state.comprobante}`);
 }
 
 if (!text) return;
-    
+
 
     console.log(`📱 Cliente: ${from}`);
     console.log(`💬 Mensaje: ${text}`);
     if (!clientState.has(from)) {
   clientState.set(from, {});
-} 
+}
 if (
   text.includes("experiencia básico") ||
   text.includes("experiencia basico") ||
@@ -393,7 +393,7 @@ if (
 }
   console.log("🧠 Estado actual:", clientState.get(from));
 
-    const reply = getReply(text, from, rawText);
+    const reply = await getReply(text, from, rawText);
 
     await sendWhatsAppMessage(from, reply);
 
@@ -411,7 +411,7 @@ if (
 // LÓGICA INICIAL DEL BOT
 // ----------------------------------------------------
 
-function getReply(text, from, rawText) {
+async function getReply(text, from, rawText) {
 
   const state = clientState.get(from) || {};
   const selectedExperience = state.experience;
@@ -572,19 +572,47 @@ if (state.step === "CONFIRMATION") {
     text === "si" ||
     text === "yes"
   ) {
-  const people = clientState.get(from).people;
+
+const reservation = clientState.get(from);
+const people = reservation.people;
 const deposit = people * 100;
 const total = people * 350;
 const balance = total - deposit;
 
-clientState.get(from).total = total;
-clientState.get(from).deposit = deposit;
-clientState.get(from).balance = balance;
-    const folio = getNextFolio();
-  clientState.get(from).folio = folio;
+reservation.total = total;
+reservation.deposit = deposit;
+reservation.balance = balance;
 
-  clientState.get(from).step = "PENDING_DEPOSIT";
-  clientState.get(from).status = "PENDING_DEPOSIT";
+// Guardar la reserva y generar el folio central en Supabase
+const { data, error } = await supabase.rpc("crear_reserva_cet", {
+  p_canal: "whatsapp",
+  p_nombre_cliente: reservation.name,
+  p_personas: people,
+  p_fecha_visita: reservation.date,
+  p_experiencia: `${reservation.location} - ${reservation.experience}`,
+  p_total_mxn: total,
+  p_anticipo_mxn: deposit,
+  p_saldo_mxn: balance,
+  p_estado_pago: "pendiente"
+});
+
+if (error) {
+  console.error("Error al guardar reserva en Supabase:", error.message);
+  return "No pudimos registrar tu reserva en este momento. Por favor, inténtalo de nuevo en unos minutos.";
+}
+
+const savedReservation = Array.isArray(data) ? data[0] : data;
+
+if (!savedReservation?.folio_generado) {
+  console.error("Supabase no devolvió el folio:", data);
+  return "No pudimos confirmar el registro de tu reserva. Por favor, inténtalo de nuevo.";
+}
+
+const folio = savedReservation.folio_generado;
+reservation.folio = folio;
+reservation.reservaId = savedReservation.reserva_id;
+reservation.step = "PENDING_DEPOSIT";
+reservation.status = "PENDING_DEPOSIT";
 
     if (state.language === "EN") {
   return `🎉 Excellent!
