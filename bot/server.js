@@ -24,7 +24,26 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const FOLIO_FILE = path.join(__dirname, "folio.json");
+function normalizePhone(phone) {
+  let digits = String(phone ?? "").replace(/\D/g, "");
 
+  // Si recibe 10 dígitos nacionales, agrega el código de México.
+  if (/^\d{10}$/.test(digits)) {
+    digits = "52" + digits;
+  }
+
+  // Convierte el formato móvil antiguo 521 al actual 52.
+  if (digits.startsWith("521") && digits.length === 13) {
+    digits = "52" + digits.slice(3);
+  }
+
+  // Validar formato mexicano: 52 + 10 dígitos.
+  if (!/^52\d{10}$/.test(digits)) {
+    throw new Error("Número mexicano inválido. Se requieren 10 dígitos.");
+  }
+
+  return digits;
+}
 function getNextFolio() {
   let lastFolio = 0;
 
@@ -206,11 +225,7 @@ if (processedMessages.has(message.id)) {
 
 processedMessages.add(message.id);
 
-let from = message.from;
-
-    if (from.startsWith("521")) {
-       from = "52" + from.slice(3);
-    }
+let from = normalizePhone(message.from);
 
     const rawText = message?.text?.body?.trim();
 const text = rawText?.toLowerCase();
@@ -574,6 +589,26 @@ if (state.step === "CONFIRMATION") {
   ) {
 
 const reservation = clientState.get(from);
+
+if (!reservation) {
+  return "No encontramos los datos de tu reserva. Por favor, inicia nuevamente tu solicitud.";
+}
+
+if (reservation.status === "PROCESSING") {
+  return "Estamos registrando tu reserva. Por favor, espera un momento antes de enviar otra confirmación. ⏳";
+}
+
+if (reservation.status === "PENDING_DEPOSIT" && reservation.folio) {
+  return `Tu reserva ya fue registrada. ✅
+
+🆔 Folio: ${reservation.folio}
+
+Por favor, envíanos tu comprobante de depósito.`;
+}
+
+// Bloquear nuevas confirmaciones mientras se registra
+reservation.status = "PROCESSING";
+
 const people = reservation.people;
 const deposit = people * 100;
 const total = people * 350;
@@ -584,27 +619,51 @@ reservation.deposit = deposit;
 reservation.balance = balance;
 
 // Guardar la reserva y generar el folio central en Supabase
-const { data, error } = await supabase.rpc("crear_reserva_cet", {
-  p_canal: "whatsapp",
-  p_nombre_cliente: reservation.name,
-  p_personas: people,
-  p_fecha_visita: reservation.date,
-  p_experiencia: `${reservation.location} - ${reservation.experience}`,
-  p_total_mxn: total,
-  p_anticipo_mxn: deposit,
-  p_saldo_mxn: balance,
-  p_estado_pago: "pendiente"
-});
+let data;
+let error;
+
+try {
+  const result = await supabase.rpc("crear_reserva_cet", {
+    p_canal: "whatsapp",
+    p_nombre_cliente: reservation.name,
+    p_personas: people,
+    p_fecha_visita: reservation.date,
+    p_experiencia: `${reservation.location} - ${reservation.experience}`,
+    p_total_mxn: total,
+    p_anticipo_mxn: deposit,
+    p_saldo_mxn: balance,
+    p_estado_pago: "pendiente"
+  });
+
+  data = result.data;
+  error = result.error;
+
+} catch (rpcError) {
+  reservation.status = "CONFIRMATION";
+  reservation.step = "CONFIRMATION";
+
+  console.error("Error de conexión con Supabase:", rpcError);
+
+  return "No pudimos conectar con el sistema de reservas. Por favor, inténtalo nuevamente en unos minutos.";
+}
 
 if (error) {
+  reservation.status = "CONFIRMATION";
+  reservation.step = "CONFIRMATION";
+
   console.error("Error al guardar reserva en Supabase:", error.message);
+
   return "No pudimos registrar tu reserva en este momento. Por favor, inténtalo de nuevo en unos minutos.";
 }
 
 const savedReservation = Array.isArray(data) ? data[0] : data;
 
 if (!savedReservation?.folio_generado) {
+  reservation.status = "CONFIRMATION";
+  reservation.step = "CONFIRMATION";
+
   console.error("Supabase no devolvió el folio:", data);
+
   return "No pudimos confirmar el registro de tu reserva. Por favor, inténtalo de nuevo.";
 }
 
