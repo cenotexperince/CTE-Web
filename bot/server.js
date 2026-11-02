@@ -322,19 +322,73 @@ if (messageType === "image" || messageType === "document") {
       return;
     }
 
-    console.log("✅ Comprobante guardado correctamente");
-    console.log(`📋 Folio: ${state.folio}`);
-    console.log(`📁 Archivo: ${downloadedFile.path}`);
-
+   
     // --------------------------------------------------
-// ACTUALIZAR ESTADO DE LA RESERVA
-// --------------------------------------------------
+    // SUBIR COMPROBANTE Y REGISTRARLO EN SUPABASE
+    // --------------------------------------------------
 
-state.status = "RECEIPT_RECEIVED";
-state.comprobante = downloadedFile.path;
+    let storagePath = null;
 
-console.log("🟡 Estado actualizado: RECEIPT_RECEIVED");
-console.log(`📎 Comprobante: ${state.comprobante}`);
+    try {
+      storagePath = await uploadComprobanteToSupabase(
+        state.folio,
+        mediaId,
+        downloadedFile.buffer,
+        downloadedFile.mimeType
+      );
+
+      await registrarComprobanteEnReserva(
+        state.folio,
+        from,
+        storagePath
+      );
+
+      console.log("✅ Comprobante registrado en Supabase");
+      console.log("📋 Folio:", state.folio);
+      console.log("📁 Ruta privada:", storagePath);
+
+    } catch (error) {
+
+      console.error(
+        "❌ Error procesando comprobante:",
+        error
+      );
+
+      // Si Storage recibió el archivo pero falló
+      // la actualización de la reserva, eliminarlo.
+      if (storagePath) {
+        const { error: cleanupError } = await supabase.storage
+          .from("cet-documentos")
+          .remove([storagePath]);
+
+        if (cleanupError) {
+          console.error(
+            "❌ No se pudo limpiar el archivo:",
+            cleanupError
+          );
+        }
+      }
+
+      await sendWhatsAppMessage(
+        from,
+        "⚠️ No pudimos registrar tu comprobante correctamente.\n\n" +
+        "Nuestro equipo revisará el inconveniente. Por favor, no realices otro depósito."
+      );
+
+      return;
+    }
+
+    // Limpiar la copia local después del registro exitoso.
+    if (fs.existsSync(downloadedFile.path)) {
+      fs.unlinkSync(downloadedFile.path);
+    }
+
+    // Actualizar estado en memoria después de confirmar Supabase.
+    state.status = "RECEIPT_RECEIVED";
+    state.comprobante = storagePath;
+
+    console.log("🟡 Estado actualizado: RECEIPT_RECEIVED");
+    console.log("📎 Comprobante:", storagePath);
 
     // --------------------------------------------------
     // CONFIRMAR RECEPCIÓN AL CLIENTE
@@ -1042,18 +1096,100 @@ async function downloadWhatsAppMedia(mediaId, outputPath) {
     console.log("✅ Archivo guardado:", outputPath);
     console.log("📦 Tamaño:", buffer.length, "bytes");
 
-    return {
-      path: outputPath,
-      mimeType,
-      size: buffer.length
-    };
+   return {
+  path: outputPath,
+  mimeType,
+  size: buffer.length,
+  buffer
+};
 
   } catch (error) {
     console.error("❌ Error descargando media:", error);
     return null;
   }
 }
+async function uploadComprobanteToSupabase(
+  folio,
+  mediaId,
+  buffer,
+  mimeType
+) {
+  const allowedTypes = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "application/pdf": "pdf"
+  };
+
+  if (!allowedTypes[mimeType]) {
+    throw new Error("Formato de comprobante no permitido.");
+  }
+
+  if (!buffer || buffer.length === 0) {
+    throw new Error("El comprobante está vacío.");
+  }
+
+  if (buffer.length > 10 * 1024 * 1024) {
+    throw new Error("El comprobante supera los 10 MB.");
+  }
+
+  const extension = allowedTypes[mimeType];
+
+  const storagePath =
+    `${folio}/comprobante-${mediaId}.${extension}`;
+
+  const { data, error } = await supabase.storage
+    .from("cet-documentos")
+    .upload(storagePath, buffer, {
+      contentType: mimeType,
+      upsert: false
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  console.log("✅ Comprobante subido a Supabase:", data.path);
+
+  return data.path;
+}
 async function sendWhatsAppDocument(to, filePath, filename) {
+  
+async function registrarComprobanteEnReserva(
+  folio,
+  telefono,
+  storagePath
+) {
+  const recibidoEn = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from("reservas")
+    .update({
+      comprobante: storagePath,
+      comprobante_recibido_en: recibidoEn,
+      estado_pago: "comprobante_recibido",
+      actualizado_en: recibidoEn
+    })
+    .eq("folio", folio)
+    .eq("telefono_whatsapp", telefono)
+    .eq("estado_pago", "pendiente")
+    .is("comprobante", null)
+    .select("id, folio")
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    throw new Error(
+      "No se encontró una reserva pendiente compatible con el folio y teléfono."
+    );
+  }
+
+  console.log("✅ Reserva actualizada:", data.folio);
+
+  return data;
+}
 
   try {
 
