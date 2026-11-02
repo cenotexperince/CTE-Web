@@ -632,7 +632,8 @@ try {
     p_total_mxn: total,
     p_anticipo_mxn: deposit,
     p_saldo_mxn: balance,
-    p_estado_pago: "pendiente"
+    p_estado_pago: "pendiente",
+    p_telefono_whatsapp: from
   });
 
   data = result.data;
