@@ -5,7 +5,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { generateVoucher } from "./voucher.js";
 import { supabase } from "./supabase.js";
-import { registrarComprobanteEnReserva } from "./reservas.js";
+import {
+  registrarComprobanteEnReserva,
+  confirmarPagoEnReserva
+} from "./reservas.js";
 
 dotenv.config();
 
@@ -84,16 +87,14 @@ app.get("/health", (req, res) => {
 // CONFIRMAR PAGO - ADMINISTRACIÓN
 // --------------------------------------------------
 
+
 app.post("/admin/confirm-payment", async (req, res) => {
-
   try {
-
     const adminKey = req.headers["x-admin-key"];
-    const { folio } = req.body;
+    const folio = String(req.body?.folio || "").trim();
 
     // Verificar clave administrativa
-    if (!adminKey || adminKey !== ADMIN_KEY) {
-
+    if (!ADMIN_KEY || !adminKey || adminKey !== ADMIN_KEY) {
       console.log("❌ Intento de acceso administrativo no autorizado");
 
       return res.status(401).json({
@@ -102,70 +103,49 @@ app.post("/admin/confirm-payment", async (req, res) => {
       });
     }
 
-    // Verificar que exista el folio
+    // Validar folio
     if (!folio) {
-
       return res.status(400).json({
         ok: false,
         error: "Falta el folio"
       });
     }
 
-    // Buscar la reserva en memoria
-    const reservation = [...clientState.values()]
-      .find(state => state.folio === folio);
-
-    if (!reservation) {
-
-      return res.status(404).json({
-        ok: false,
-        error: "Folio no encontrado"
-      });
-    }
-
     console.log(`🔎 Solicitud de confirmación para ${folio}`);
-    console.log("📋 Estado actual:", reservation.status);
 
-    // Solo se puede confirmar un comprobante recibido
-    if (reservation.status !== "RECEIPT_RECEIVED") {
+    // Confirmar directamente en Supabase
+    const reservation = await confirmarPagoEnReserva(folio);
 
-      return res.status(409).json({
-        ok: false,
-        error: "La reserva no está pendiente de confirmación de pago",
-        status: reservation.status
-      });
-    }
-
-    // Confirmar el pago
-    reservation.status = "PAYMENT_CONFIRMED";
-
-    reservation.paymentConfirmedAt =
-      new Date().toISOString();
-
-    console.log(`🟢 PAGO CONFIRMADO: ${folio}`);
-    console.log(
-      `📅 Fecha de confirmación: ${reservation.paymentConfirmedAt}`
-    );
+    console.log(`🟢 PAGO CONFIRMADO: ${reservation.folio}`);
 
     return res.json({
       ok: true,
       message: "Pago confirmado correctamente",
       folio: reservation.folio,
-      status: reservation.status,
-      name: reservation.name,
-      people: reservation.people,
-      total: reservation.total,
-      deposit: reservation.deposit,
-      balance: reservation.balance,
-      comprobante: reservation.comprobante
+      status: reservation.estado_pago,
+      name: reservation.nombre_cliente,
+      people: reservation.personas,
+      date: reservation.fecha_visita,
+      experience: reservation.experiencia,
+      total: reservation.total_mxn,
+      deposit: reservation.anticipo_mxn,
+      balance: reservation.saldo_mxn,
+      phone: reservation.telefono_whatsapp,
+      comprobante: reservation.comprobante,
+      voucherStatus: reservation.voucher_estado
     });
 
   } catch (error) {
+    console.error("❌ Error confirmando pago:", error);
 
-    console.error(
-      "❌ Error confirmando pago:",
-      error
-    );
+    if (
+      error.message?.includes("No se encontró una reserva")
+    ) {
+      return res.status(409).json({
+        ok: false,
+        error: error.message
+      });
+    }
 
     return res.status(500).json({
       ok: false,
