@@ -7,7 +7,9 @@ import { generateVoucher } from "./voucher.js";
 import { supabase } from "./supabase.js";
 import {
   registrarComprobanteEnReserva,
-  confirmarPagoEnReserva
+  confirmarPagoEnReserva,
+  registrarVoucherGenerado,
+  registrarVoucherEnviado
 } from "./reservas.js";
 
 dotenv.config();
@@ -1089,39 +1091,27 @@ async function downloadWhatsAppMedia(mediaId, outputPath) {
     return null;
   }
 }
-async function uploadComprobanteToSupabase(
+
+async function uploadVoucherToSupabase(
   folio,
-  mediaId,
-  buffer,
-  mimeType
+  filePath
 ) {
-  const allowedTypes = {
-    "image/jpeg": "jpg",
-    "image/png": "png",
-    "application/pdf": "pdf"
-  };
+  const buffer = fs.readFileSync(filePath);
 
-  if (!allowedTypes[mimeType]) {
-    throw new Error("Formato de comprobante no permitido.");
-  }
-
-  if (!buffer || buffer.length === 0) {
-    throw new Error("El comprobante está vacío.");
+  if (!buffer.length) {
+    throw new Error("El voucher PDF está vacío.");
   }
 
   if (buffer.length > 10 * 1024 * 1024) {
-    throw new Error("El comprobante supera los 10 MB.");
+    throw new Error("El voucher supera los 10 MB.");
   }
 
-  const extension = allowedTypes[mimeType];
-
-  const storagePath =
-    `${folio}/comprobante-${mediaId}.${extension}`;
+  const storagePath = `${folio}/voucher-${folio}.pdf`;
 
   const { data, error } = await supabase.storage
     .from("cet-documentos")
     .upload(storagePath, buffer, {
-      contentType: mimeType,
+      contentType: "application/pdf",
       upsert: false
     });
 
@@ -1129,118 +1119,96 @@ async function uploadComprobanteToSupabase(
     throw error;
   }
 
-  console.log("✅ Comprobante subido a Supabase:", data.path);
+  console.log("🎟️ Voucher almacenado:", data.path);
 
   return data.path;
 }
 
 async function sendWhatsAppDocument(to, filePath, filename) {
-  try {
+  const fileBuffer = fs.readFileSync(filePath);
 
-    const fileBuffer = fs.readFileSync(filePath);
-
-    const formData = new FormData();
-
-    formData.append(
-      "messaging_product",
-      "whatsapp"
-    );
-
-    formData.append(
-      "file",
-      new Blob([fileBuffer], {
-        type: "application/pdf"
-      }),
-      filename
-    );
-
-    const uploadResponse = await fetch(
-      `https://graph.facebook.com/v25.0/${PHONE_NUMBER_ID}/media`,
-      {
-        method: "POST",
-
-        headers: {
-          "Authorization":
-            `Bearer ${WHATSAPP_TOKEN}`
-        },
-
-        body: formData
-      }
-    );
-
-    const uploadData = await uploadResponse.json();
-
-    if (!uploadResponse.ok) {
-      console.error(
-        "❌ Error subiendo voucher:",
-        uploadData
-      );
-      return;
-    }
-
-    const mediaId = uploadData.id;
-
-    console.log(
-      "✅ Voucher subido a WhatsApp:",
-      mediaId
-    );
-
-    const sendResponse = await fetch(
-      `https://graph.facebook.com/v25.0/${PHONE_NUMBER_ID}/messages`,
-      {
-        method: "POST",
-
-        headers: {
-          "Authorization":
-            `Bearer ${WHATSAPP_TOKEN}`,
-
-          "Content-Type":
-            "application/json"
-        },
-
-        body: JSON.stringify({
-          messaging_product: "whatsapp",
-          recipient_type: "individual",
-          to: to,
-
-          type: "document",
-
-          document: {
-            id: mediaId,
-            filename: filename
-          }
-        })
-      }
-    );
-
-    const sendData = await sendResponse.json();
-
-    if (!sendResponse.ok) {
-      console.error(
-        "❌ Error enviando voucher:",
-        sendData
-      );
-      return;
-    }
-
-    console.log(
-      "✅ Voucher enviado por WhatsApp:",
-      sendData
-    );
-
-  } catch (error) {
-
-    console.error(
-      "❌ Error enviando documento:",
-      error
-    );
-
+  if (!fileBuffer.length) {
+    throw new Error("El voucher PDF está vacío.");
   }
-}
-// ------------------------------------------------------------
-// WEBHOOK DE 2CHAT - MENSAJES WABA RECIBIDOS
-// ------------------------------------------------------------
 
+  const formData = new FormData();
+
+  formData.append("messaging_product", "whatsapp");
+
+  formData.append(
+    "file",
+    new Blob([fileBuffer], {
+      type: "application/pdf"
+    }),
+    filename
+  );
+
+  // Subir PDF a Meta
+  const uploadResponse = await fetch(
+    `https://graph.facebook.com/v25.0/${PHONE_NUMBER_ID}/media`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${WHATSAPP_TOKEN}`
+      },
+      body: formData
+    }
+  );
+
+  const uploadData = await uploadResponse.json();
+
+  if (!uploadResponse.ok || !uploadData.id) {
+    throw new Error(
+      `Error subiendo voucher a Meta: ${JSON.stringify(uploadData)}`
+    );
+  }
+
+  const mediaId = uploadData.id;
+
+  console.log("✅ Voucher subido a WhatsApp:", mediaId);
+
+  // Enviar PDF al cliente
+  const sendResponse = await fetch(
+    `https://graph.facebook.com/v25.0/${PHONE_NUMBER_ID}/messages`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${WHATSAPP_TOKEN}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        recipient_type: "individual",
+        to,
+        type: "document",
+        document: {
+          id: mediaId,
+          filename
+        }
+      })
+    }
+  );
+
+  const sendData = await sendResponse.json();
+
+  if (
+    !sendResponse.ok ||
+    !sendData.messages?.[0]?.id
+  ) {
+    throw new Error(
+      `Error enviando voucher por WhatsApp: ${JSON.stringify(sendData)}`
+    );
+  }
+
+  const messageId = sendData.messages[0].id;
+
+  console.log("✅ WhatsApp aceptó el mensaje:", messageId);
+
+  return {
+    mediaId,
+    messageId
+  };
+}
 app.post("/webhook/2chat", async (req, res) => {
   // Respondemos inmediatamente a 2Chat
   res.sendStatus(200);
