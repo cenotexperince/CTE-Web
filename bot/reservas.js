@@ -97,7 +97,7 @@ export async function registrarVoucherGenerado(
     })
     .eq("folio", folio)
     .eq("estado_pago", "confirmado")
-    .in("voucher_estado", ["pendiente", "error"])
+    .eq("voucher_estado", "generando")
     .select("id, folio, voucher_path, voucher_estado")
     .maybeSingle();
 
@@ -137,7 +137,7 @@ export async function registrarVoucherEnviado(
     })
     .eq("folio", folio)
     .eq("estado_pago", "confirmado")
-    .eq("voucher_estado", "generado")
+    .eq("voucher_estado", "enviando")
     .not("voucher_path", "is", null)
     .select("id, folio, voucher_estado, voucher_message_id")
     .maybeSingle();
@@ -153,6 +153,145 @@ export async function registrarVoucherEnviado(
   }
 
   console.log("📨 Voucher aceptado por WhatsApp:", data.folio);
+
+  return data;
+}
+
+export async function reclamarGeneracionVoucher(folio) {
+  const { data, error } = await supabase
+    .rpc("reclamar_generacion_voucher", {
+      p_folio: folio
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  console.log(
+    data
+      ? `🔒 Generación reclamada: ${folio}`
+      : `⚠️ Generación no disponible: ${folio}`
+  );
+
+  return data === true;
+}
+
+export async function reclamarEnvioVoucher(folio) {
+  const { data, error } = await supabase
+    .rpc("reclamar_envio_voucher", {
+      p_folio: folio
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  console.log(
+    data
+      ? `🔒 Envío reclamado: ${folio}`
+      : `⚠️ Envío no disponible: ${folio}`
+  );
+
+  return data === true;
+}
+
+export async function registrarErrorVoucher(folio, mensaje) {
+  const actualizadoEn = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from("reservas")
+    .update({
+      voucher_estado: "error",
+      voucher_error: String(mensaje).slice(0, 1000),
+      actualizado_en: actualizadoEn
+    })
+    .eq("folio", folio)
+    .eq("estado_pago", "confirmado")
+    .eq("voucher_estado", "generando")
+    .is("voucher_path", null)
+    .select("id, folio, voucher_estado")
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    throw new Error(
+      "No se pudo registrar el error del voucher."
+    );
+  }
+
+  console.log("⚠️ Error de generación registrado:", folio);
+
+  return data;
+}
+export async function obtenerReservaPorFolio(folio) {
+  const { data, error } = await supabase
+    .from("reservas")
+    .select(`
+      id,
+      folio,
+      estado_pago,
+      nombre_cliente,
+      personas,
+      fecha_visita,
+      experiencia,
+      total_mxn,
+      anticipo_mxn,
+      saldo_mxn,
+      telefono_whatsapp,
+      comprobante,
+      voucher_path,
+      voucher_estado,
+      voucher_error,
+      voucher_intentos,
+      voucher_message_id
+    `)
+    .eq("folio", folio)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    throw new Error("No se encontró la reserva.");
+  }
+
+  return data;
+}
+
+export async function registrarErrorEnvioVoucher(
+  folio,
+  mensaje
+) {
+  const actualizadoEn = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from("reservas")
+    .update({
+      voucher_error: String(mensaje).slice(0, 1000),
+      actualizado_en: actualizadoEn
+    })
+    .eq("folio", folio)
+    .eq("estado_pago", "confirmado")
+    .eq("voucher_estado", "enviando")
+    .is("voucher_message_id", null)
+    .select("id, folio, voucher_estado")
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    throw new Error(
+      "No se pudo registrar el error del envío."
+    );
+  }
+
+  console.log("⚠️ Error de envío registrado:", folio);
 
   return data;
 }

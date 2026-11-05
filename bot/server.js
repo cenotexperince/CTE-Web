@@ -9,7 +9,12 @@ import {
   registrarComprobanteEnReserva,
   confirmarPagoEnReserva,
   registrarVoucherGenerado,
-  registrarVoucherEnviado
+  registrarVoucherEnviado,
+  reclamarGeneracionVoucher,
+  obtenerReservaPorFolio,
+  registrarErrorVoucher,
+  reclamarEnvioVoucher,
+  registrarErrorEnvioVoucher
 } from "./reservas.js";
 
 dotenv.config();
@@ -126,13 +131,14 @@ app.post("/admin/confirm-payment", async (req, res) => {
       folio: reservation.folio,
       status: reservation.estado_pago,
       name: reservation.nombre_cliente,
-      people: reservation.personas,
+      seller: "Cenotes Experience Tulum",
+      phone: "56 6568 9052",
       date: reservation.fecha_visita,
+      people: reservation.personas,
       experience: reservation.experiencia,
       total: reservation.total_mxn,
       deposit: reservation.anticipo_mxn,
       balance: reservation.saldo_mxn,
-      phone: reservation.telefono_whatsapp,
       comprobante: reservation.comprobante,
       voucherStatus: reservation.voucher_estado
     });
@@ -1092,10 +1098,8 @@ async function downloadWhatsAppMedia(mediaId, outputPath) {
   }
 }
 
-async function uploadVoucherToSupabase(
-  folio,
-  filePath
-) {
+
+async function uploadVoucherToSupabase(folio, filePath) {
   const buffer = fs.readFileSync(filePath);
 
   if (!buffer.length) {
@@ -1106,16 +1110,58 @@ async function uploadVoucherToSupabase(
     throw new Error("El voucher supera los 10 MB.");
   }
 
-  const storagePath = `${folio}/voucher-${folio}.pdf`;
+  const bucket = supabase.storage.from("cet-documentos");
+  const filename = `voucher-${folio}.pdf`;
+  const storagePath = `${folio}/${filename}`;
 
-  const { data, error } = await supabase.storage
-    .from("cet-documentos")
-    .upload(storagePath, buffer, {
+  // Buscar primero si el voucher ya existe.
+  const { data: files, error: listError } = await bucket.list(
+    folio,
+    { search: filename }
+  );
+
+  if (listError) {
+    throw listError;
+  }
+
+  const existingFile = (files || []).find(
+    file => file.name === filename
+  );
+
+  if (existingFile) {
+    console.log("♻️ Voucher existente recuperado:", storagePath);
+    return storagePath;
+  }
+
+  // Intentar subir el documento.
+  const { data, error } = await bucket.upload(
+    storagePath,
+    buffer,
+    {
       contentType: "application/pdf",
       upsert: false
-    });
+    }
+  );
 
   if (error) {
+    // Si la respuesta de carga falló, comprobar si
+    // Storage alcanzó a guardar el documento.
+    const { data: retryFiles, error: retryError } =
+      await bucket.list(folio, { search: filename });
+
+    if (retryError) {
+      throw error;
+    }
+
+    const recoveredFile = (retryFiles || []).find(
+      file => file.name === filename
+    );
+
+    if (recoveredFile) {
+      console.log("♻️ Se recuperó la carga del voucher:", storagePath);
+      return storagePath;
+    }
+
     throw error;
   }
 
@@ -1123,6 +1169,206 @@ async function uploadVoucherToSupabase(
 
   return data.path;
 }
+
+async function descargarVoucherDeSupabase(
+  storagePath,
+  outputPath
+) {
+  if (!storagePath) {
+    throw new Error("No existe la ruta del voucher en Storage.");
+  }
+
+  const { data, error } = await supabase.storage
+    .from("cet-documentos")
+    .download(storagePath);
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    throw new Error("No se pudo descargar el voucher.");
+  }
+
+  const buffer = Buffer.from(
+    await data.arrayBuffer()
+  );
+
+  if (
+    !buffer.length ||
+    buffer.subarray(0, 5).toString() !== "%PDF-"
+  ) {
+    throw new Error("El archivo recuperado no es un PDF válido.");
+  }
+
+  fs.writeFileSync(outputPath, buffer);
+
+  console.log("📥 Voucher recuperado de Storage:", storagePath);
+
+  return outputPath;
+}
+
+async function generarYRegistrarVoucher(folio) {
+  let filePath = null;
+  let generacionReclamada = false;
+  let storagePath = null;
+
+  try {
+    const reservation = await obtenerReservaPorFolio(folio);
+
+    if (reservation.estado_pago !== "confirmado") {
+      throw new Error("El pago de la reserva no está confirmado.");
+    }
+
+    // Si ya existe un voucher registrado, no generar otro.
+    if (reservation.voucher_path) {
+      console.log("🎟️ El voucher ya existe:", folio);
+      return reservation.voucher_path;
+    }
+
+    const reclamada = await reclamarGeneracionVoucher(folio);
+
+    if (!reclamada) {
+      throw new Error(
+        "La generación del voucher no está disponible."
+      );
+    }
+
+    generacionReclamada = true;
+
+    const people = Number(reservation.personas);
+
+    if (!Number.isInteger(people) || people < 1) {
+      throw new Error("Número de personas inválido.");
+    }
+
+    const total = Number(reservation.total_mxn);
+    const deposit = Number(reservation.anticipo_mxn);
+    const balance = Number(reservation.saldo_mxn);
+
+    if (
+      !Number.isFinite(total) ||
+      !Number.isFinite(deposit) ||
+      !Number.isFinite(balance)
+    ) {
+      throw new Error("Los importes de la reserva no son válidos.");
+    }
+
+    const partes = String(
+      reservation.experiencia || ""
+    ).split(" - ");
+
+    const location = partes[0]?.trim() || "";
+    const experience = partes.slice(1).join(" - ").trim();
+
+    if (!location || !experience) {
+      throw new Error(
+        "La ubicación o experiencia no son válidas."
+      );
+    }
+
+    const outputPath = path.join(
+      __dirname,
+      "comprobantes",
+      `voucher-${folio}.pdf`
+    );
+
+    filePath = outputPath;
+
+    await generateVoucher({
+      folio: reservation.folio,
+      location,
+      activity: experience === "BASIC"
+        ? "Experiencia Básica"
+        : experience,
+      seller: "Cenotes Experience Tulum",
+      phone: "56 6568 9052",  
+      name: reservation.nombre_cliente,
+      date: reservation.fecha_visita,
+      people,
+      price: total / people,
+      total,
+      deposit,
+      balance
+    }, outputPath);
+
+    storagePath = await uploadVoucherToSupabase(
+      folio,
+      outputPath
+    );
+
+    await registrarVoucherGenerado(folio, storagePath);
+
+    console.log(
+      "✅ Voucher generado y registrado:",
+      folio
+    );
+
+    return storagePath;
+
+  } catch (error) {
+    console.error(
+      "❌ Error generando voucher:",
+      error
+    );
+
+    // Si el archivo ya llegó a Storage, intentamos
+    // registrar nuevamente su ruta en Supabase.
+    if (storagePath) {
+      try {
+        await registrarVoucherGenerado(
+          folio,
+          storagePath
+        );
+
+        console.log(
+          "✅ Se recuperó el registro del voucher:",
+          folio
+        );
+
+        return storagePath;
+
+      } catch (registroError) {
+        console.error(
+          "🚨 El PDF está en Storage, pero no se pudo registrar:",
+          registroError
+        );
+      }
+
+    } else if (generacionReclamada) {
+      // Solo registrar error cuando reclamamos la generación
+      // y todavía no tenemos un archivo almacenado.
+      try {
+        await registrarErrorVoucher(
+          folio,
+          error.message
+        );
+
+      } catch (registroError) {
+        console.error(
+          "❌ No se pudo registrar el error del voucher:",
+          registroError
+        );
+      }
+    }
+
+    throw error;
+
+  } finally {
+    // La limpieza local nunca debe alterar el estado de la reserva.
+    if (filePath && fs.existsSync(filePath)) {
+      try {
+        fs.unlinkSync(filePath);
+      } catch (cleanupError) {
+        console.error(
+          "⚠️ No se pudo eliminar el PDF local:",
+          cleanupError
+        );
+      }
+    }
+  }
+}
+
 
 async function sendWhatsAppDocument(to, filePath, filename) {
   const fileBuffer = fs.readFileSync(filePath);
@@ -1209,6 +1455,136 @@ async function sendWhatsAppDocument(to, filePath, filename) {
     messageId
   };
 }
+
+async function enviarVoucherAlCliente(folio) {
+  let filePath = null;
+  let envioReclamado = false;
+
+  try {
+    let reservation = await obtenerReservaPorFolio(folio);
+
+    if (reservation.estado_pago !== "confirmado") {
+      throw new Error("El pago no está confirmado.");
+    }
+
+    // Evitar enviar un voucher que ya fue aceptado.
+    if (reservation.voucher_estado === "enviado") {
+      return {
+        ok: true,
+        alreadySent: true,
+        folio,
+        messageId: reservation.voucher_message_id
+      };
+    }
+
+    // Si todavía no existe el PDF, generarlo.
+    if (!reservation.voucher_path) {
+      await generarYRegistrarVoucher(folio);
+      reservation = await obtenerReservaPorFolio(folio);
+    }
+
+    if (!reservation.voucher_path) {
+      throw new Error("La reserva no tiene un voucher almacenado.");
+    }
+
+    if (reservation.voucher_estado !== "generado") {
+      throw new Error(
+        `El voucher no está disponible para envío. Estado: ${reservation.voucher_estado}`
+      );
+    }
+
+    if (!reservation.telefono_whatsapp) {
+      throw new Error("La reserva no tiene teléfono de WhatsApp.");
+    }
+
+    // Preparar el PDF antes de reclamar el envío.
+    filePath = path.join(
+      __dirname,
+      "comprobantes",
+      `envio-${folio}.pdf`
+    );
+
+    await descargarVoucherDeSupabase(
+      reservation.voucher_path,
+      filePath
+    );
+
+    // Reclamar el envío de forma atómica.
+    const reclamada = await reclamarEnvioVoucher(folio);
+
+    if (!reclamada) {
+      throw new Error(
+        "No fue posible reclamar el envío. Verifica el estado de la reserva."
+      );
+    }
+    envioReclamado = true;
+
+    // Enviar el documento al cliente.
+    const resultado = await sendWhatsAppDocument(
+      reservation.telefono_whatsapp,
+      filePath,
+      `voucher-${folio}.pdf`
+    );
+
+    // Registrar el identificador devuelto por Meta.
+    await registrarVoucherEnviado(
+      folio,
+      resultado.messageId
+    );
+
+    console.log("🎉 Voucher enviado y registrado:", folio);
+
+    return {
+      ok: true,
+      folio,
+      messageId: resultado.messageId,
+      voucherStatus: "enviado"
+    };
+
+  } catch (error) {
+  console.error(
+    "🚨 Error o resultado incierto al enviar voucher:",
+    folio,
+    error
+  );
+
+  if (envioReclamado) {
+    try {
+      await registrarErrorEnvioVoucher(
+        folio,
+        error.message
+      );
+
+      console.log(
+        "⚠️ Error registrado para revisión:",
+        folio
+      );
+
+    } catch (registroError) {
+      console.error(
+        "❌ No se pudo registrar el error de envío:",
+        registroError
+      );
+    }
+  }
+
+  throw error;
+
+  } finally {
+    // Eliminar únicamente el archivo temporal local.
+    if (filePath && fs.existsSync(filePath)) {
+      try {
+        fs.unlinkSync(filePath);
+      } catch (cleanupError) {
+        console.error(
+          "⚠️ No se pudo eliminar el PDF temporal:",
+          cleanupError
+        );
+      }
+    }
+  }
+}
+
 app.post("/webhook/2chat", async (req, res) => {
   // Respondemos inmediatamente a 2Chat
   res.sendStatus(200);
